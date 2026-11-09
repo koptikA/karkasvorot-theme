@@ -1,7 +1,7 @@
 <?php
 /**
  * Template Name: Услуга
- * Service page: crumbs, h1, intro, price card, term/warranty if set, content, works, FAQ, order form.
+ * Service page: crumbs, h1, intro, price card, term/warranty if set, size calculator (gates, wickets), content, works, FAQ, order form.
  * «Прочие изделия»: content is split by <h2 id="anchor"> (anchors of kv_other_sections()); each section gets its price and works.
  */
 get_header();
@@ -44,6 +44,12 @@ while ( have_posts() ) :
 			</div>
 		</div>
 
+		<?php
+		$kv_calc = array( 'karkas-otkatnyh-vorot' => 'slide', 'karkas-raspashnyh-vorot' => 'swing', 'kalitki' => 'wicket' );
+		if ( isset( $kv_calc[ get_post_field( 'post_name' ) ] ) ) {
+			get_template_part( 'template-parts/calc', null, array( 'type' => $kv_calc[ get_post_field( 'post_name' ) ] ) );
+		}
+		?>
 		<?php if ( $kv_is_misc ) : ?>
 			<?php foreach ( kv_other_sections() as $kv_anchor => $kv_name ) : ?>
 				<?php $kv_from = isset( $kv_prices[ $kv_anchor ] ) ? (string) $kv_prices[ $kv_anchor ] : ''; ?>

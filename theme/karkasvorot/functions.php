@@ -51,28 +51,44 @@ add_action( 'wp_enqueue_scripts', function () {
 } );
 
 add_action( 'wp_head', function () {
-	// Discover the first-screen photograph before styles finish loading.
+	// Discover the first-screen photograph and the heading font before styles finish loading.
 	if ( is_front_page() ) {
-		echo '<link rel="preload" as="image" fetchpriority="high" href="' . esc_url( get_template_directory_uri() . '/assets/work-gates.webp' ) . '">' . "\n";
+		echo '<link rel="preload" as="image" fetchpriority="high" href="' . esc_url( kv_hero_image()['url'] ) . '">' . "\n";
 	}
-	$font = get_template_directory_uri() . '/assets/fonts/manrope-cyrillic.woff2';
-	echo '<link rel="preload" href="' . esc_url( $font ) . '" as="font" type="font/woff2" crossorigin>' . "\n";
+	foreach ( array( 'manrope-cyrillic', 'unbounded-cyrillic-800-normal' ) as $font ) {
+		echo '<link rel="preload" href="' . esc_url( get_template_directory_uri() . '/assets/fonts/' . $font . '.woff2' ) . '" as="font" type="font/woff2" crossorigin>' . "\n";
+	}
 }, 1 );
 
 /**
- * Contact link: $type phone|viber|telegram. Empty setting → ''. Carries data-goal for Metrika.
+ * Home first-screen photo: assets/hero.webp. To replace it, overwrite that one file (any size/ratio, WebP);
+ * size and cache-busting version are read from the file itself.
+ */
+function kv_hero_image(): array {
+	$file = KV_DIR . '/assets/hero.webp';
+	$size = @getimagesize( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors -- missing file → defaults.
+	return array(
+		'url'    => get_template_directory_uri() . '/assets/hero.webp?v=' . ( file_exists( $file ) ? filemtime( $file ) : KV_VERSION ),
+		'width'  => $size ? $size[0] : 1600,
+		'height' => $size ? $size[1] : 900,
+	);
+}
+
+/**
+ * Contact link: $type phone|viber|telegram|whatsapp. Empty setting → ''. Carries data-goal for Metrika.
  */
 function kv_contact_link( string $type, string $class, string $label = '' ): string {
 	$links = array(
 		'phone'    => array( kv_phone_href(), kv_opt( 'phone' ), 'phone_click' ),
 		'viber'    => array( kv_opt( 'viber' ), 'Viber', 'viber_click' ),
 		'telegram' => array( kv_telegram_href(), 'Telegram', 'telegram_click' ),
+		'whatsapp' => array( kv_whatsapp_href(), 'WhatsApp', 'whatsapp_click' ),
 	);
 	if ( ! isset( $links[ $type ] ) || '' === $links[ $type ][0] ) {
 		return '';
 	}
 	list( $href, $text, $goal ) = $links[ $type ];
-	$external = 'telegram' === $type ? ' target="_blank" rel="noopener"' : '';
+	$external = in_array( $type, array( 'telegram', 'whatsapp' ), true ) ? ' target="_blank" rel="noopener"' : '';
 	$icon = '';
 	if ( 'phone' === $type && preg_match( '/kv-footer__link|kv-mobilebar__link/', $class ) ) {
 		$icon = file_get_contents( KV_DIR . '/assets/icons/phone.svg' ); // Trusted, bundled static SVG.

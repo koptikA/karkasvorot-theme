@@ -12,6 +12,7 @@ function kv_settings_fields(): array {
 		'phone'               => array( 'kv_contacts', 'Телефон', '+375 44 772-68-23', 'sanitize_text_field' ),
 		'viber'               => array( 'kv_contacts', 'Viber (ссылка viber://…)', 'viber://chat?number=%2B375447726823', 'kv_sanitize_viber' ),
 		'telegram'            => array( 'kv_contacts', 'Telegram (имя пользователя без @)', 'Maksimus05061981', 'kv_sanitize_telegram' ),
+		'whatsapp'            => array( 'kv_contacts', 'WhatsApp (номер в международном формате, только цифры)', '375447726823', 'kv_sanitize_digits' ),
 		'email'               => array( 'kv_contacts', 'E-mail для заявок (пусто — e-mail администратора)', 'm.krasnolobov@gmail.com', 'sanitize_email' ),
 		'hours'               => array( 'kv_contacts', 'Часы работы', '', 'sanitize_text_field' ),
 		'org_name'            => array( 'kv_requisites', 'Наименование (ИП / организация)', 'Индивидуальный предприниматель Краснолобов Максим Валерьевич', 'sanitize_text_field' ),
@@ -58,6 +59,12 @@ function kv_phone_href(): string {
 function kv_telegram_href(): string {
 	$user = kv_opt( 'telegram' );
 	return '' === $user ? '' : 'https://t.me/' . $user;
+}
+
+/** https://wa.me/<number> from the WhatsApp setting ('' when empty). */
+function kv_whatsapp_href(): string {
+	$number = kv_opt( 'whatsapp' );
+	return '' === $number ? '' : 'https://wa.me/' . $number;
 }
 
 /** True when $key is a known setting the owner has not filled in yet. */

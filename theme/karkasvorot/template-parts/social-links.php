@@ -15,4 +15,13 @@
 </svg>
                 </a>
                 <?php endif; ?>
+                <?php if ( kv_whatsapp_href() ) : ?>
+                <a class="kv-social kv-social--whatsapp" href="<?php echo esc_url( kv_whatsapp_href() ); ?>" aria-label="Написать в WhatsApp" title="WhatsApp" data-goal="whatsapp_click" target="_blank" rel="noopener">
+                    <svg class="kv-contact-icon" aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 7.6a8.4 8.4 0 0 0-7.27 12.6L7.6 24.4l4.3-1.12A8.4 8.4 0 1 0 16 7.6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M12.7 11.5c.3-.5.6-.5.9-.5h.55c.2 0 .4.1.5.35l.8 1.9c.1.25 0 .5-.15.65l-.55.65c-.15.15-.15.4-.05.55.6 1 1.5 1.9 2.65 2.5.2.1.4.1.55-.05l.7-.8c.15-.2.4-.25.6-.15l1.8.9c.2.1.3.3.3.5 0 .5-.2 1.25-.8 1.7-.6.4-1.6.6-3.2-.1-1.8-.8-3.4-2.4-4.3-4-.9-1.6-.6-3-.3-3.6Z" fill="currentColor"/>
+<rect x="0.5" y="0.5" width="31" height="31" rx="2.83333" stroke="currentColor"/>
+</svg>
+                </a>
+                <?php endif; ?>
             </div>

@@ -10,7 +10,7 @@
 <a class="kv-skip" href="#content">Перейти к содержимому</a>
 <header class="kv-header">
 	<div class="kv-container kv-header__inner">
-		<a class="kv-header__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">KARKASVOROT.BY</a>
+		<a class="kv-header__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="KARKASVOROT.BY, на главную">KARKAS<i aria-hidden="true">/</i>VOROT.BY</a>
 		<button class="kv-header__burger" type="button" aria-expanded="false" aria-controls="kv-nav">
 			<span class="kv-header__burger-icon" aria-hidden="true"></span><span class="kv-visually-hidden">Меню</span>
 		</button>

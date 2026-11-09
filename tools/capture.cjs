@@ -30,6 +30,7 @@ fs.mkdirSync(out,{recursive:true});
    await page.evaluate(()=>document.fonts.ready);
    // Resolve lazy images before full-page capture.
    await page.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=700){scrollTo(0,y);await new Promise(r=>setTimeout(r,80));}scrollTo(0,0);});
+   await page.evaluate(()=>Promise.race([new Promise(r=>setTimeout(r,4000)),Promise.all([...document.images].map(i=>i.complete||new Promise(r=>{i.onload=i.onerror=r;})))]));  // lazy images; orbit items off-stage never load
    await page.waitForTimeout(350);
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
    if(overflow) throw Error('Horizontal overflow: '+name+' '+width);
@@ -38,6 +39,18 @@ fs.mkdirSync(out,{recursive:true});
    index.push({file,url:base+url,width,status:response.status()});
    console.log(file);
   }
+ }
+ // Home: orbit gallery moves with scroll (viewport shot mid-way), calculator fills the real order form.
+ for(const width of [1440,390]){
+  await page.setViewportSize({width,height:900});await page.goto(base+'/',{waitUntil:'networkidle'});
+  const o=await page.evaluate(()=>{const s=document.querySelector('.kv-orbit');return s&&{top:s.getBoundingClientRect().top+scrollY,h:s.offsetHeight,on:s.classList.contains('is-orbit'),first:s.querySelector('.kv-orbit__cap').textContent};});
+  if(!o||!o.on)throw Error('Orbit gallery not enabled '+width);
+  await page.evaluate(y=>scrollTo({top:y,behavior:'instant'}),o.top+(o.h-900)*0.5);await page.waitForTimeout(1500);
+  if(await page.locator('.kv-orbit__cap').textContent()===o.first)throw Error('Orbit did not advance on scroll '+width);
+  await page.screenshot({path:path.join(out,'home-orbit-'+width+'.png')});
+  await page.click('[data-type="swing"]');await page.click('.kv-calc__go');
+  const f=await page.evaluate(()=>({p:document.getElementById('kv-f-product').value,c:document.getElementById('kv-f-comment').value,h:location.hash}));
+  if(f.p!=='Каркас распашных ворот'||!/^Каркас распашных ворот: ширина проёма 4,0 м, высота 1,8 м/.test(f.c)||f.h!=='#zayavka')throw Error('Calculator did not fill the form: '+JSON.stringify(f));
  }
  // Keyboard menu and analytics behavior without ever requesting Yandex.
  await page.setViewportSize({width:390,height:900});await page.goto(base);

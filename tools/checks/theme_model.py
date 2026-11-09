@@ -8,6 +8,7 @@ KEYS = {
     "kv_phone": "+375 44 772-68-23",
     "kv_viber": "viber://chat?number=%2B375447726823",
     "kv_telegram": "Maksimus05061981",
+    "kv_whatsapp": "375447726823",
     "kv_email": "m.krasnolobov@gmail.com", "kv_hours": "", "kv_org_name": "Индивидуальный предприниматель Краснолобов Максим Валерьевич", "kv_unp": "191469362", "kv_address": "",
     "kv_registration": "Зарегистрирован 12.08.2011, учёт в инспекции МНС по Партизанскому району г. Минска",
     "kv_metrika_id": "", "kv_yandex_verification": "", "kv_google_verification": "",

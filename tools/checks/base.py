@@ -18,10 +18,10 @@ def check(base, s):
     if status != 200:
         return ["главная: статус %s" % status]
     header = _part(html, "header")
-    for needle, what in (("tel:+375447726823", "телефон"), ("viber://", "Viber"), ("t.me/", "Telegram")):
+    for needle, what in (("tel:+375447726823", "телефон"), ("viber://", "Viber"), ("t.me/", "Telegram"), ("https://wa.me/375447726823", "WhatsApp")):
         if needle not in header:
             fails.append("в шапке нет: %s (%s)" % (what, needle))
-    for goal in ("phone_click", "viber_click", "telegram_click"):
+    for goal in ("phone_click", "viber_click", "telegram_click", "whatsapp_click"):
         if 'data-goal="%s"' % goal not in html:
             fails.append("нет ссылки с data-goal=%s" % goal)
     skip = re.search(r'<a[^>]+href="#([\w-]+)"[^>]*>\s*Перейти к содержимому', html)
@@ -43,9 +43,17 @@ def check(base, s):
     if '<details class="kv-products__dropdown">' not in header:
         fails.append("шапка: нет группы продукции")
     for part, label in ((header, "шапка"), (footer, "подвал")):
-        for messenger in ("Viber", "Telegram"):
+        for messenger in ("Viber", "Telegram", "WhatsApp"):
             if 'aria-label="Написать в %s"' % messenger not in part:
                 fails.append(label + ": нет доступной иконки " + messenger)
+    # Size calculator: its products must be real options of the order form it fills.
+    form = re.search(r'<form\b[^>]*\bid="zayavka".*?</form>', html, re.S)
+    calc = re.findall(r'data-product="([^"]+)"', html)
+    if 'id="raschet"' not in html or len(calc) != 3:
+        fails.append("главная: нет калькулятора #raschet с тремя типами")
+    for name in calc:
+        if not form or '<option value="%s"' % name not in form.group(0):
+            fails.append("калькулятор: «%s» нет среди изделий формы заявки" % name)
     if "Беларус" not in footer:
         fails.append("в подвале нет зоны работы «по всей Беларуси»")
     if not re.search(r'<html[^>]+lang="ru(-RU)?"', html):

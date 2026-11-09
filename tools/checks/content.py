@@ -143,7 +143,7 @@ def check(base, s):
     for n in ("99-З", "Яндекс", "cookie", "отозвать"):
         if n not in pol:
             fails.append("политика: нет «%s»" % n)
-    for n in ("tel:+375447726823", "viber://", "t.me/", "Беларус"):
+    for n in ("tel:+375447726823", "viber://", "t.me/", "wa.me/", "Беларус"):
         if n not in _main(html["/kontakty/"]):
             fails.append("контакты: нет %s" % n)
 

@@ -72,3 +72,34 @@ function kv_public_faq_answer( string $answer ): string {
     }
     return $answer;
 }
+
+/** Concise display names for legacy imported works; owner-written titles stay intact. */
+add_filter( 'the_title', function ( $title, $id ) {
+    if ( 'work' !== get_post_type( $id ) ) { return $title; }
+    $source = (int) get_post_meta( $id, '_kv_source', true );
+    if ( ! $source ) { return $title; }
+    $file = wp_basename( (string) get_post_meta( $source, '_wp_attached_file', true ) );
+    $names = array(
+        'kovanye-vorota-s-kirpichnymi-stolbami.jpg' => 'Кованые ворота с калиткой',
+        'frame-125.jpg' => 'Ворота из металлоштакетника',
+        'raspashnye-vorota-s-kalitkoj.png' => 'Забор с калиткой',
+        'zabor-iz-profnastila-bordo-cena.jpg' => 'Забор из профнастила',
+        'naves-dlya-mashin-karkas-vorot-by.jpg' => 'Навес для автомобиля',
+        'sadovaya-bosedka-barbekyu-karkas.jpg' => 'Беседка с мангалом',
+        'slider1.jpg' => 'Ворота из металлоштакетника',
+        'slider2.jpg' => 'Ворота с декоративными пиками',
+        'slider4.png' => 'Металлические ворота',
+        'slider7.jpg' => 'Каркас мебели',
+        'slider8.jpg' => 'Каркас стола',
+        'slider9.jpg' => 'Каркас мебели',
+        'slider10.jpg' => 'Обувница',
+    );
+    if ( ! isset( $names[ $file ] ) ) { return $title; }
+    $images = kv_catalog_images();
+    $legacy = array(
+        (string) get_post_field( 'post_title', $source, 'raw' ),
+        trim( (string) get_post_meta( $source, '_wp_attachment_image_alt', true ), " \"'«»" ),
+        isset( $images[ $file ] ) ? $images[ $file ][1] : '',
+    );
+    return in_array( (string) get_post_field( 'post_title', $id, 'raw' ), $legacy, true ) ? $names[ $file ] : $title;
+}, 10, 2 );

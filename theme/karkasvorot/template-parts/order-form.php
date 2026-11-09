@@ -19,10 +19,13 @@ $kv_err    = function ( $field ) use ( $kv_e ) {
 };
 ?>
 <section class="kv-order" aria-labelledby="kv-order-title">
-	<div class="kv-container">
+	<div class="kv-wrap kv-order__in">
+		<div class="kv-order__intro">
+			<p class="kv-tag">Заявка на расчёт</p>
+			<h2 class="kv-h2" id="kv-order-title">Пришлите размер —<br><b>посчитаем</b></h2>
+			<p class="kv-lead">Мастер перезвонит, уточнит детали и назовёт стоимость. Viber, Telegram и WhatsApp тоже подойдут.</p>
+		</div>
 		<form id="zayavka" class="kv-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-			<h2 class="kv-form__title" id="kv-order-title">Оставить заявку</h2>
-			<p class="kv-form__lead">Перезвоним, уточним размеры и посчитаем стоимость.</p>
 
 			<?php if ( 'ok' === $args['status'] ) : ?>
 				<div class="kv-form__success" role="status" tabindex="-1" data-goal-auto="form_submit">Спасибо! Мы перезвоним в ближайшее время.</div>
