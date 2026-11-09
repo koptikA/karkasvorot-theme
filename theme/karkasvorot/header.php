@@ -16,7 +16,7 @@
 		</button>
 		<nav id="kv-nav" class="kv-header__nav" aria-label="Главное меню">
             <ul class="kv-menu kv-menu--compact">
-                <li class="kv-products">
+                <li class="kv-menu-products">
                     <details class="kv-products__dropdown">
                         <summary>Продукция <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></summary>
                         <ul class="kv-products__list">
