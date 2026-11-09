@@ -90,11 +90,18 @@ function kv_service_price( int $page_id ): array {
 	);
 }
 
-/** @return WP_Post[] published works, optionally of one service page and one «Прочие» section. */
+/**
+ * @return WP_Post[] published works, optionally of one service page and one «Прочие» section.
+ * A work belongs to its main service (_kv_service) and to every page in _kv_also (one meta row per page ID).
+ */
 function kv_works( int $service_id = 0, int $limit = 12, string $section = '' ): array {
 	$meta = array();
 	if ( $service_id > 0 ) {
-		$meta[] = array( 'key' => '_kv_service', 'value' => $service_id );
+		$meta[] = array(
+			'relation' => 'OR',
+			array( 'key' => '_kv_service', 'value' => $service_id ),
+			array( 'key' => '_kv_also', 'value' => $service_id ),
+		); // WP_Query groups by post ID, so a work matching both is returned once
 	}
 	if ( '' !== $section ) {
 		$meta[] = array( 'key' => '_kv_section', 'value' => $section );
@@ -202,7 +209,7 @@ add_action( 'save_post_page', function ( $post_id ) {
 } );
 
 add_action( 'add_meta_boxes_work', function () {
-	add_meta_box( 'kv_work', 'Работа: услуга и город', 'kv_work_metabox', 'work', 'side', 'default' );
+	add_meta_box( 'kv_work', 'Работа: услуги и город', 'kv_work_metabox', 'work', 'side', 'default' );
 } );
 
 function kv_work_metabox( $post ) {
@@ -213,7 +220,12 @@ function kv_work_metabox( $post ) {
 	foreach ( kv_service_pages() as $page ) {
 		echo '<option value="' . esc_attr( (string) $page->ID ) . '"' . selected( $service, $page->ID, false ) . '>' . esc_html( get_the_title( $page ) ) . '</option>';
 	}
-	echo '</select></p><p><label for="kv_section">Раздел «Прочих изделий»</label><select class="widefat" id="kv_section" name="kv_section"><option value="">— нет —</option>';
+	$also = array_map( 'intval', get_post_meta( $post->ID, '_kv_also' ) );
+	echo '</select></p><fieldset><legend>Также показывать в…</legend>';
+	foreach ( kv_service_pages() as $page ) {
+		echo '<label style="display:block"><input type="checkbox" name="kv_also[]" value="' . esc_attr( (string) $page->ID ) . '"' . checked( in_array( $page->ID, $also, true ), true, false ) . '> ' . esc_html( get_the_title( $page ) ) . '</label>';
+	}
+	echo '</fieldset><p><label for="kv_section">Раздел «Прочих изделий»</label><select class="widefat" id="kv_section" name="kv_section"><option value="">— нет —</option>';
 	foreach ( kv_other_sections() as $anchor => $title ) {
 		echo '<option value="' . esc_attr( $anchor ) . '"' . selected( $section, $anchor, false ) . '>' . esc_html( $title ) . '</option>';
 	}
@@ -232,5 +244,11 @@ add_action( 'save_post_work', function ( $post_id ) {
 	$section = isset( $in['kv_section'] ) && array_key_exists( $in['kv_section'], kv_other_sections() ) ? $in['kv_section'] : '';
 	kv_set_meta( $post_id, '_kv_service', $service ? (string) $service : '' );
 	kv_set_meta( $post_id, '_kv_section', $section );
+	$posted = isset( $in['kv_also'] ) && is_array( $in['kv_also'] ) ? array_map( 'absint', $in['kv_also'] ) : array();
+	$also   = array_diff( array_intersect( wp_list_pluck( kv_service_pages(), 'ID' ), $posted ), array( $service ) );
+	delete_post_meta( $post_id, '_kv_also' );
+	foreach ( $also as $page_id ) {
+		add_post_meta( $post_id, '_kv_also', (string) $page_id );
+	}
 	kv_set_meta( $post_id, '_kv_city', isset( $in['kv_city'] ) && is_string( $in['kv_city'] ) ? sanitize_text_field( $in['kv_city'] ) : '' );
 } );

@@ -158,20 +158,20 @@ add_shortcode( 'kv_operator', function () {
 	return $out;
 } );
 
-/** Works: file in the media library => [service page slug, «Прочие» section]. */
+/** Works: file in the media library => [service page slug, «Прочие» section, optional: also shown in these service pages]. */
 function kv_install_works(): array {
 	return array(
-		'kovanye-vorota-s-kirpichnymi-stolbami.jpg' => array( 'karkas-raspashnyh-vorot', '' ),
-		'frame-125.jpg'                             => array( 'karkas-raspashnyh-vorot', '' ),
-		'raspashnye-vorota-s-kalitkoj.png'          => array( 'prochie-izdeliya', 'zabory' ),
+		'kovanye-vorota-s-kirpichnymi-stolbami.jpg' => array( 'karkas-raspashnyh-vorot', '', array( 'kalitki' ) ),
+		'frame-125.jpg'                             => array( 'karkas-raspashnyh-vorot', '', array( 'kalitki' ) ),
+		'raspashnye-vorota-s-kalitkoj.png'          => array( 'prochie-izdeliya', 'zabory', array( 'kalitki' ) ),
 		'zabor-iz-profnastila-bordo-cena.jpg'       => array( 'prochie-izdeliya', 'zabory' ),
-		'naves-dlya-mashin-karkas-vorot-by.jpg'     => array( 'navesy-dlya-avto', '' ),
+		'naves-dlya-mashin-karkas-vorot-by.jpg'     => array( 'navesy-dlya-avto', 'navesy', array( 'prochie-izdeliya' ) ),
 		'sadovaya-bosedka-barbekyu-karkas.jpg'      => array( 'prochie-izdeliya', 'navesy' ),
 		'slider10.jpg'                              => array( 'prochie-izdeliya', 'obuvnicy' ),
 		'slider9.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
 		'slider8.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
 		'slider7.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
-		'slider1.jpg'                               => array( 'karkas-raspashnyh-vorot', '' ),
+		'slider1.jpg'                               => array( 'karkas-otkatnyh-vorot', '' ), // owner: a sliding gate
 		'slider2.jpg'                               => array( '', '' ),
 		'slider4.png'                               => array( 'karkas-raspashnyh-vorot', '' ),
 	);
@@ -201,6 +201,7 @@ function kv_install_photos(): array {
 		'vorota-shtaketnik-svetlye.jpg'    => array( 'slider1.jpg', 'Ворота из светлого металлоштакетника на участке' ),
 		'vorota-chernye-prutok-u-doma.jpg' => array( 'slider4.png', 'Чёрные металлические ворота из вертикальных прутьев у кирпичного дома' ),
 		'zelenyy-zabor-s-kalitkoy.jpg'     => array( 'raspashnye-vorota-s-kalitkoj.png', 'Зелёный забор из профнастила с калиткой' ),
+		'obuvnitsa-svarnaya.jpg'           => array( 'slider10.jpg', 'Сварная металлическая обувница с декоративными квадратами на боковинах' ),
 		'mangal-na-podstavke.jpg'          => array( '', 'Металлический мангал на подставке с боковыми полками во дворе' ),
 	);
 }
@@ -275,14 +276,14 @@ function kv_install_migrate( array $ids ) {
 			delete_post_meta( $work, '_kv_section' );
 		}
 	};
-	foreach ( array( 'slider1.jpg', 'slider4.png' ) as $file ) {
+	foreach ( array( 'slider1.jpg' => 'karkas-otkatnyh-vorot', 'slider4.png' => 'karkas-raspashnyh-vorot' ) as $file => $slug ) {
 		$w = kv_install_work_of( kv_attachment_by_file( $file ) );
 		if ( $w && ! get_post_meta( $w, '_kv_service', true ) ) {
-			$bind( $w, 'karkas-raspashnyh-vorot' );
+			$bind( $w, $slug );
 		}
 	}
 	$w = kv_install_work_of( kv_attachment_by_file( 'naves-dlya-mashin-karkas-vorot-by.jpg' ) );
-	if ( $w && 'navesy' === get_post_meta( $w, '_kv_section', true ) ) {
+	if ( $w && 'navesy' === get_post_meta( $w, '_kv_section', true ) && ! empty( $ids['navesy-dlya-avto'] ) && (int) get_post_meta( $w, '_kv_service', true ) !== (int) $ids['navesy-dlya-avto'] ) {
 		$bind( $w, 'navesy-dlya-avto' );
 	}
 
@@ -316,6 +317,43 @@ function kv_install_migrate( array $ids ) {
 		}
 	}
 	update_option( 'kv_migrated_1109', KV_VERSION, false );
+}
+
+/**
+ * Works in several sections (owner, 2026-11-09), once per site: slider1 from swing to sliding gates, extra sections
+ * from kv_install_works(), the carport also in «Прочие → Навесы». Only adds what is missing; owner's later edits stay.
+ */
+function kv_install_links( array $ids ) {
+	if ( get_option( 'kv_migrated_also' ) ) {
+		return;
+	}
+	$works = kv_install_works();
+	$work  = function ( string $file ) {
+		return kv_install_work_of( kv_attachment_by_file( $file ) );
+	};
+	$w = $work( 'slider1.jpg' );
+	if ( $w && ! empty( $ids['karkas-raspashnyh-vorot'] ) && ! empty( $ids['karkas-otkatnyh-vorot'] ) && (int) get_post_meta( $w, '_kv_service', true ) === (int) $ids['karkas-raspashnyh-vorot'] ) {
+		update_post_meta( $w, '_kv_service', (string) $ids['karkas-otkatnyh-vorot'] );
+	}
+	$w = $work( 'naves-dlya-mashin-karkas-vorot-by.jpg' );
+	if ( $w && ! get_post_meta( $w, '_kv_section', true ) ) {
+		update_post_meta( $w, '_kv_section', 'navesy' );
+	}
+	foreach ( $works as $file => $target ) {
+		$w = empty( $target[2] ) ? 0 : $work( $file );
+		if ( ! $w ) {
+			continue;
+		}
+		$have = array_map( 'intval', get_post_meta( $w, '_kv_also' ) );
+		foreach ( $target[2] as $slug ) {
+			$page = empty( $ids[ $slug ] ) ? 0 : (int) $ids[ $slug ];
+			if ( $page && ! in_array( $page, $have, true ) && (int) get_post_meta( $w, '_kv_service', true ) !== $page ) {
+				add_post_meta( $w, '_kv_also', (string) $page );
+				$have[] = $page;
+			}
+		}
+	}
+	update_option( 'kv_migrated_also', KV_VERSION, false );
 }
 
 /** @return array{created:array,skipped:array,drafted:array} */
@@ -432,6 +470,7 @@ function kv_install(): array {
 	if ( ! $failed ) {
 		kv_install_owner_photos( $ids, $report );
 		kv_install_migrate( $ids );
+		kv_install_links( $ids );
 	}
 
 	$old = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => -1 ) );

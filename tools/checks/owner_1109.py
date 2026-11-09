@@ -1,5 +1,5 @@
 """Owner answers 2026-11-09: improved work photos, «Навесы для авто» page + calculator tab, brigades block,
-frame-only FAQ, works filter without empty services."""
+frame-only FAQ, works filter without empty services. Works in several sections (_kv_also), slider1 = sliding gate."""
 import json
 import re
 
@@ -14,6 +14,7 @@ PHOTOS = {  # new file in the theme -> legacy source of the work
     "vorota-shtaketnik-svetlye.jpg": "slider1.jpg",
     "vorota-chernye-prutok-u-doma.jpg": "slider4.png",
     "zelenyy-zabor-s-kalitkoy.jpg": "raspashnye-vorota-s-kalitkoj.png",
+    "obuvnitsa-svarnaya.jpg": "slider10.jpg",
 }
 FRAME_Q = "Продаёте ли ролики, направляющую, автоматику?"
 # Before the owner's answer: «доставка и монтаж по всей Беларуси», «выезд на монтаж … согласуем».
@@ -49,20 +50,58 @@ $k    = get_page_by_path( 'kalitki' )->ID;
 $faq  = json_decode( get_post_meta( $k, '_kv_faq', true ), true );
 $keep = array_values( array_filter( $faq, function ( $i ) { return false === strpos( $i['q'], 'ролики' ); } ) );
 set_post_thumbnail( $w, $src );
-delete_post_meta( $w, '_kv_service' );
+update_post_meta( $w, '_kv_service', (string) get_page_by_path( 'karkas-raspashnyh-vorot' )->ID );
+$f = kv_install_work_of( kv_attachment_by_file( 'frame-125.jpg' ) );
+delete_post_meta( $f, '_kv_also' );
+add_post_meta( $f, '_kv_also', (string) get_page_by_path( 'karkas-otkatnyh-vorot' )->ID ); // owner's own extra section
+$nv = kv_install_work_of( kv_attachment_by_file( 'naves-dlya-mashin-karkas-vorot-by.jpg' ) );
+delete_post_meta( $nv, '_kv_also' );
+delete_post_meta( $nv, '_kv_section' );
 update_post_meta( $k, '_kv_faq', wp_slash( wp_json_encode( $keep, JSON_UNESCAPED_UNICODE ) ) );
 delete_option( 'kv_migrated_1109' );
+delete_option( 'kv_migrated_also' );
 $n = count( get_posts( array( 'post_type' => array( 'attachment', 'work', 'page' ), 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) ) );
 kv_install();
+delete_option( 'kv_migrated_also' );
 kv_install();
+$also = function ( $id ) {
+	$v = array_map( function ( $p ) { return get_post_field( 'post_name', (int) $p ); }, get_post_meta( $id, '_kv_also' ) );
+	sort( $v );
+	return $v;
+};
 $faq = json_decode( get_post_meta( $k, '_kv_faq', true ), true );
 echo wp_json_encode( array(
 	'thumb'   => wp_basename( (string) get_post_meta( (int) get_post_thumbnail_id( $w ), '_wp_attached_file', true ) ),
 	'service' => get_post_field( 'post_name', (int) get_post_meta( $w, '_kv_service', true ) ),
+	'frame'   => $also( $f ),
+	'naves'   => array( get_post_field( 'post_name', (int) get_post_meta( $nv, '_kv_service', true ) ), get_post_meta( $nv, '_kv_section', true ), $also( $nv ) ),
 	'frame_q' => count( array_filter( $faq, function ( $i ) { return false !== strpos( $i['q'], 'ролики' ); } ) ),
 	'grew'    => count( get_posts( array( 'post_type' => array( 'attachment', 'work', 'page' ), 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) ) ) - $n,
 ) );
 """
+
+# Works shown in several sections: legacy file -> work URL, main service, «Прочие» section, extra sections (raw rows).
+LINKS = r"""
+$out = array();
+foreach ( array( 'slider1.jpg', 'frame-125.jpg', 'kovanye-vorota-s-kirpichnymi-stolbami.jpg', 'raspashnye-vorota-s-kalitkoj.png', 'naves-dlya-mashin-karkas-vorot-by.jpg' ) as $file ) {
+	$w = kv_install_work_of( kv_attachment_by_file( $file ) );
+	$out[ $file ] = array( 'url' => $w ? get_permalink( $w ) : '', 'service' => $w ? get_post_field( 'post_name', (int) get_post_meta( $w, '_kv_service', true ) ) : '',
+		'section' => $w ? (string) get_post_meta( $w, '_kv_section', true ) : '',
+		'also' => $w ? array_map( function ( $p ) { return get_post_field( 'post_name', (int) $p ); }, get_post_meta( $w, '_kv_also' ) ) : array() );
+}
+echo wp_json_encode( $out );
+"""
+ALSO = {  # file -> (main service, «Прочие» section, extra sections)
+    "slider1.jpg": ("karkas-otkatnyh-vorot", "", []),
+    "frame-125.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
+    "kovanye-vorota-s-kirpichnymi-stolbami.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
+    "raspashnye-vorota-s-kalitkoj.png": ("prochie-izdeliya", "zabory", ["kalitki"]),
+    "naves-dlya-mashin-karkas-vorot-by.jpg": ("navesy-dlya-avto", "navesy", ["prochie-izdeliya"]),
+}
+
+
+def _cards(html, url):
+    return html.count('kv-work__caption"><a href="%s"' % url)
 
 
 def _main(html):
@@ -131,8 +170,8 @@ def check(base, s):
         fails.append("прочие изделия: раздел навесов не заменён ссылкой на страницу навесов")
 
     _, arch, _ = fetch(base + "/nashi-raboty/")
-    if "usluga=karkas-otkatnyh-vorot" in arch:
-        fails.append("работы: фильтр «Каркас откатных ворот» без работ виден")
+    if "usluga=karkas-otkatnyh-vorot" not in arch:
+        fails.append("работы: фильтр «Каркас откатных ворот» с работой не виден")
     if "usluga=navesy-dlya-avto" not in arch:
         fails.append("работы: нет фильтра навесов")
 
@@ -145,10 +184,26 @@ def check(base, s):
             fails.append("работа %s: старое вложение удалено" % PHOTOS[new])
         if not w["alt"] or re.search(r"\d", w["alt"]):
             fails.append("%s: alt пуст или с цифрами: %r" % (new, w["alt"]))
-    for old in ("slider1.jpg", "slider4.png"):
+    for old, slug in (("slider1.jpg", "karkas-otkatnyh-vorot"), ("slider4.png", "karkas-raspashnyh-vorot")):
         new = [k for k, v in PHOTOS.items() if v == old][0]
-        if out["works"][new]["service"] != "karkas-raspashnyh-vorot":
-            fails.append("%s: не привязана к «Каркас распашных ворот»" % old)
+        if out["works"][new]["service"] != slug:
+            fails.append("%s: не привязана к %s" % (old, slug))
+
+    links = json.loads(run_php(base, LINKS))
+    for file, (service, section, also) in ALSO.items():
+        w = links[file]
+        if (w["service"], w["section"], sorted(w["also"])) != (service, section, sorted(also)):
+            fails.append("работа %s: %r, нужно %r" % (file, w, (service, section, also)))
+    pages = {path: fetch(base + path)[1] for path in ("/kalitki/", "/karkas-otkatnyh-vorot/", NAVESY, "/nashi-raboty/?usluga=kalitki", "/nashi-raboty/?usluga=karkas-otkatnyh-vorot")}
+    shown = [("/karkas-otkatnyh-vorot/", "slider1.jpg"), ("/nashi-raboty/?usluga=karkas-otkatnyh-vorot", "slider1.jpg"), (NAVESY, "naves-dlya-mashin-karkas-vorot-by.jpg")]
+    shown += [(p, f) for p in ("/kalitki/", "/nashi-raboty/?usluga=kalitki") for f in ("frame-125.jpg", "kovanye-vorota-s-kirpichnymi-stolbami.jpg", "raspashnye-vorota-s-kalitkoj.png")]
+    for path, file in shown:
+        n = _cards(_main(pages[path]), links[file]["url"])
+        if n != 1:
+            fails.append("%s: работа %s показана %d раз, нужно 1" % (path, file, n))
+    navesy = re.search(r'id="navesy".*?</section>', misc, re.S)
+    if not navesy or _cards(navesy.group(0), links["naves-dlya-mashin-karkas-vorot-by.jpg"]["url"]) != 1 or base + NAVESY not in navesy.group(0):
+        fails.append("прочие изделия: в разделе навесов нет работы-навеса рядом со ссылкой на страницу навесов")
     if out["works"]["naves-dlya-avto.jpg"]["service"] != "navesy-dlya-avto":
         fails.append("работа-навес не привязана к странице навесов")
     if out["mangal"][0] != 1 or out["mangal"][1] != "prochie-izdeliya" or not out["mangal"][2].startswith("mangal-na-podstavke"):
@@ -156,12 +211,18 @@ def check(base, s):
 
     run_php(base, "wp_set_current_user( 1 ); kv_install();")
     again = json.loads(run_php(base, STATE % "array()"))
+    if json.loads(run_php(base, LINKS)) != links:
+        fails.append("повторная активация изменила привязки работ")
     if again["count"] != out["count"]:
         fails.append("повторная активация: вложений+работ+страниц %d → %d" % (out["count"], again["count"]))
 
     live = json.loads(run_php(base, LIVE))
-    if not live["thumb"].startswith("vorota-shtaketnik-svetlye") or live["service"] != "karkas-raspashnyh-vorot":
+    if not live["thumb"].startswith("vorota-shtaketnik-svetlye") or live["service"] != "karkas-otkatnyh-vorot":
         fails.append("обновление старой установки: работа slider1 %r" % live)
+    if live["frame"] != ["kalitki", "karkas-otkatnyh-vorot"]:
+        fails.append("обновление старой установки: frame-125 также в %r (ручной раздел потерян или дубли)" % live["frame"])
+    if live["naves"] != ["navesy-dlya-avto", "navesy", ["prochie-izdeliya"]]:
+        fails.append("обновление старой установки: навес %r" % live["naves"])
     if live["frame_q"] != 1:
         fails.append("обновление старой установки: вопрос про комплектующие %d раз" % live["frame_q"])
     if live["grew"] != 0:

@@ -137,7 +137,10 @@ def check(base, s):
     works = set(re.findall(r'href="%s/nashi-raboty/([^/"?]+)/"' % re.escape(base), _main(html["/nashi-raboty/"])))
     if len(works) < 10:
         fails.append("«Наши работы»: %d работ, нужно ≥ 10" % len(works))
-    st, kal, _ = fetch(base + "/nashi-raboty/?usluga=kalitki")
+    # Every real service has works now: a temporary empty service page shows the empty state.
+    empty = run_php(base, "$id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Пустая услуга', 'post_name' => 'kv-empty-test' ) ); update_post_meta( $id, '_wp_page_template', 'page-service.php' ); echo $id;")
+    st, kal, _ = fetch(base + "/nashi-raboty/?usluga=kv-empty-test")
+    run_php(base, "wp_delete_post( %d, true );" % int(empty))
     if st != 200 or "Скоро добавим новые работы" not in kal:
         fails.append("«Наши работы» с фильтром без работ: нет «Скоро добавим новые работы»")
     pol = _text(_main(html["/politika-konfidencialnosti/"]))
