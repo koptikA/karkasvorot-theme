@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Концепция C — Ваш размер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9e7e1;--ink:#111418;--steel:#2b3440;--accent:#1f7ae0;--soft:#d9d6cd}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 40px}
+.logo{font-weight:800;letter-spacing:.02em}
+nav{display:flex;gap:28px;font-size:14px}nav a,header a{color:inherit;text-decoration:none}
+.tel{font-weight:700}
+.hero{display:grid;grid-template-columns:1fr 1.25fr;gap:40px;align-items:center;padding:30px 40px 60px;min-height:calc(100vh - 70px)}
+h1{font-size:clamp(40px,5.4vw,84px);line-height:.98;letter-spacing:-.05em;font-weight:800}
+h1 .w{display:inline-block;color:var(--accent);font-variant-numeric:tabular-nums}
+.lead{margin:22px 0 0;font-size:18px;line-height:1.55;color:#454c55;max-width:34ch}
+.stage{background:#f6f5f1;border-radius:28px;padding:34px 34px 26px;box-shadow:0 30px 60px -30px rgb(17 20 24 / .35)}
+.tabs{display:flex;gap:6px;margin-bottom:24px}
+.tabs button{font:inherit;font-size:14px;font-weight:700;border:0;background:var(--soft);padding:10px 16px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--ink);color:#fff}
+svg{width:100%;height:240px;display:block}
+.fr{fill:none;stroke:var(--steel);stroke-width:6;stroke-linejoin:round;transition:all .25s ease}
+.br{fill:none;stroke:var(--steel);stroke-width:3.5;transition:all .25s ease}
+.dim{stroke:var(--accent);stroke-width:1.5}
+.dt{font-family:"IBM Plex Mono",monospace;font-size:14px;fill:var(--accent)}
+.ground{stroke:#b9b5aa;stroke-width:2;stroke-dasharray:6 6}
+label{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:13px;margin:18px 0 8px;color:#555}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px}
+.go{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:16px;flex-wrap:wrap}
+.btn{background:var(--accent);color:#fff;font-weight:800;padding:18px 26px;border-radius:14px;text-decoration:none}
+.btn:hover{background:#155fb3}
+.small{font-size:13px;color:#666;max-width:28ch}
+.strip{display:flex;gap:12px;padding:0 40px 40px;overflow:auto}
+.strip img{height:150px;border-radius:16px;object-fit:cover;aspect-ratio:4/3}
+@media (max-width:900px){nav{display:none}header{padding:16px 18px}.hero{grid-template-columns:1fr;padding:10px 18px 30px;min-height:auto}.stage{padding:22px 18px;border-radius:20px}svg{height:180px}.strip{padding:0 18px 30px}.strip img{height:110px}}
+</style>
+</head>
+<body>
+<header><span class="logo">KARKASVOROT.BY</span><nav><a href="#">Откатные</a><a href="#">Распашные</a><a href="#">Калитки</a><a href="#">Работы</a></nav><a class="tel" href="tel:+375447726823">+375 44 772-68-23</a></header>
+<section class="hero">
+ <div>
+  <h1>Ворота<br>шириной<br><span class="w" id="hw">4,0</span> м?<br>Сварим.</h1>
+  <p class="lead">Покажите размер проёма — мастер перезвонит и рассчитает каркас. Изготовление в Минске, доставка и монтаж по всей Беларуси.</p>
+ </div>
+ <div class="stage">
+  <div class="tabs" role="group" aria-label="Тип ворот"><button aria-pressed="true" data-t="slide">Откатные</button><button aria-pressed="false" data-t="swing">Распашные</button><button aria-pressed="false" data-t="wicket">Калитка</button></div>
+  <svg viewBox="0 0 720 240" aria-label="Схема каркаса"><line class="ground" x1="0" y1="200" x2="720" y2="200"/><path class="fr" id="fr"/><path class="br" id="br"/><path class="dim" id="dm"/><text class="dt" id="dtx" text-anchor="middle"></text></svg>
+  <label for="w"><span>Ширина проёма</span><span id="wv">4,0 м</span></label>
+  <input id="w" type="range" min="1" max="7" step="0.1" value="4">
+  <div class="go"><a class="btn" id="go" href="#">Рассчитать ворота 4,0 м</a><span class="small">Цена зависит от размеров и комплектации — посчитаем бесплатно.</span></div>
+ </div>
+</section>
+<div class="strip" aria-label="Наши работы"><img src="../../tools/fixtures/uploads/2025/07/slider4.png" alt="Ворота из штакетника"><img src="../../tools/fixtures/uploads/2026/09/kovanye-vorota-s-kirpichnymi-stolbami.jpg" alt="Кованые ворота"><img src="../../tools/fixtures/uploads/2025/07/slider9.jpg" alt="Каркасы мебели"><img src="../../tools/fixtures/uploads/2025/07/slider2.jpg" alt="Забор"><img src="../../tools/fixtures/uploads/2025/07/slider7.jpg" alt="Каркасы столов"></div>
+<script>
+const w=document.getElementById('w'),fr=document.getElementById('fr'),br=document.getElementById('br'),dm=document.getElementById('dm'),dt=document.getElementById('dtx');
+let type='slide';
+function draw(){
+ const m=+w.value, wicket=type==='wicket', mv=wicket?Math.min(m,1.5):m;
+ const s=wicket?120:Math.min(110,600/ (type==='slide'?mv*1.4:mv)), W=mv*s, H=wicket?150:120, x=40, y=200-H;
+ let f,b;
+ if(type==='slide'){const t=W*.4;f=`M${x} ${y}H${x+W}V200H${x}Z M${x+W} ${y}L${x+W+t} ${y+H*.45}V200H${x+W}`;b=`M${x} 200L${x+W/2} ${y}L${x+W} 200M${x+W/2} ${y}V200`;}
+ else if(type==='swing'){f=`M${x} ${y}H${x+W/2-3}V200H${x}Z M${x+W/2+3} ${y}H${x+W}V200H${x+W/2+3}Z`;b=`M${x} ${y+H/2}H${x+W/2-3}M${x+W/2+3} ${y+H/2}H${x+W}`;}
+ else {f=`M${x} ${y}H${x+W}V200H${x}Z`;b=`M${x} ${y+H/2}H${x+W}`;}
+ fr.setAttribute('d',f);br.setAttribute('d',b);
+ dm.setAttribute('d',`M${x} 215V228M${x+W} 215V228M${x} 222H${x+W}`);dt.setAttribute('x',x+W/2);dt.setAttribute('y',214-2);
+ const v=mv.toFixed(1).replace('.',',');dt.textContent=v+' м';
+ document.getElementById('wv').textContent=v+' м';document.getElementById('hw').textContent=v;
+ document.getElementById('go').textContent=(wicket?'Рассчитать калитку ':'Рассчитать ворота ')+v+' м';
+}
+w.addEventListener('input',draw);
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-pressed',x===b));type=b.dataset.t;w.max=type==='wicket'?1.5:7;if(type==='wicket'&&+w.value>1.5)w.value=1;draw();}));
+draw();
+</script>
+</body>
+</html>

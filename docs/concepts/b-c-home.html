@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Концепция B+C — главная</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=JetBrains+Mono:wght@400;600&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+ --dark:#0e1013;--dark2:#16191e;--paper:#f2f0e9;--ink:#15191e;--grid:rgb(29 59 87 / .08);
+ --hot:#ff6a1a;--hot2:#ffb347;--muted:#9aa0a6;--on-dark:#f1efe9;--line-d:rgb(255 255 255 / .14);
+ --head:"Unbounded",sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--body:"Manrope",system-ui,sans-serif;
+ --pad:clamp(18px,4vw,56px)
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--on-dark);background:var(--dark);overflow-x:clip}
+a{color:inherit}
+img{max-width:100%;display:block}
+.tag{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--hot2)}
+h2{font-family:var(--head);font-weight:800;font-size:clamp(28px,4vw,56px);letter-spacing:-.03em;line-height:1.02;text-transform:uppercase;margin-top:10px}
+.btn{display:inline-block;background:var(--hot);color:#140a03;font-weight:700;padding:19px 28px;text-decoration:none;font-size:16px;border:0;cursor:pointer;font-family:var(--body)}
+.btn:hover{background:var(--hot2)}
+.ghost{padding:19px 22px;text-decoration:none;border:1px solid rgb(255 255 255 / .3)}
+.ghost:hover{border-color:var(--hot2);color:var(--hot2)}
+section{padding:90px var(--pad)}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px 20px;border-bottom:1px solid var(--line-d);padding-bottom:18px;margin-bottom:34px}
+.grid-bg{background-color:var(--dark2);background-image:linear-gradient(rgb(255 255 255 / .035) 1px,transparent 1px),linear-gradient(90deg,rgb(255 255 255 / .035) 1px,transparent 1px);background-size:32px 32px}
+
+/* header */
+.top{position:absolute;inset:0 0 auto;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:22px var(--pad)}
+.logo{font-family:var(--head);font-weight:800;font-size:15px;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
+.logo i{font-style:normal;color:var(--hot)}
+.top nav{display:flex;gap:30px;font-size:14px}.top nav a{text-decoration:none;opacity:.85}.top nav a:hover{opacity:1;color:var(--hot2)}
+.tel{font-weight:700;text-decoration:none;border:1px solid rgb(255 255 255 / .25);padding:10px 16px;white-space:nowrap}
+
+/* hero */
+.hero{position:relative;min-height:100svh;overflow:hidden;display:grid;grid-template-rows:1fr auto;padding:0}
+.hero .bg{position:absolute;inset:0;background:url("../../tools/fixtures/uploads/2025/07/slider9.jpg") center/cover;filter:grayscale(.35) contrast(1.15) brightness(.55);transform:scale(1.08);animation:push 14s ease-out forwards}
+.hero .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgb(14 16 19 / .96),rgb(14 16 19 / .72) 48%,rgb(14 16 19 / .2)),radial-gradient(55% 55% at 80% 70%,rgb(255 106 26 / .26),transparent 70%)}
+@keyframes push{to{transform:scale(1)}}
+.hero main{position:relative;align-self:center;padding:120px var(--pad) 40px;max-width:1100px}
+.kicker{display:inline-flex;align-items:center;gap:10px}
+.kicker::before{content:"";width:34px;height:2px;background:var(--hot);box-shadow:0 0 14px var(--hot)}
+.hero h1{font-family:var(--head);font-weight:800;font-size:clamp(38px,7vw,108px);line-height:.92;letter-spacing:-.03em;text-transform:uppercase;margin:22px 0}
+.hero h1 span{color:transparent;-webkit-text-stroke:2px var(--on-dark)}
+.hero h1 b{color:var(--hot);text-shadow:0 0 40px rgb(255 106 26 / .45)}
+.lead{font-size:18px;line-height:1.55;color:#cfd2d4;max-width:36ch}
+.cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+.sparks{position:absolute;right:16%;bottom:26%}
+.sparks i{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--hot2);box-shadow:0 0 8px var(--hot);animation:spark 1.6s linear infinite;opacity:0}
+.sparks i:nth-child(2){animation-delay:.3s;--dx:-90px}.sparks i:nth-child(3){animation-delay:.7s;--dx:60px}.sparks i:nth-child(4){animation-delay:1s;--dx:-40px}.sparks i:nth-child(5){animation-delay:1.3s;--dx:110px}
+@keyframes spark{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--dx,80px),120px);opacity:0}}
+.strip{position:relative;border-top:1px solid var(--line-d);overflow:hidden;white-space:nowrap;font-family:var(--head);font-weight:500;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.strip div{display:inline-block;padding:18px 0;animation:run 32s linear infinite}
+.strip span{margin:0 26px}.strip em{font-style:normal;color:var(--hot)}
+@keyframes run{to{transform:translateX(-50%)}}
+
+/* calculator (C) */
+.calc{display:grid;grid-template-columns:1fr 1.35fr;gap:50px;align-items:center}
+.calc h2 .w{color:var(--hot);font-variant-numeric:tabular-nums}
+.calc .lead{margin-top:18px}
+.calc ul{list-style:none;padding:0;margin-top:26px;display:grid;gap:10px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.calc ul b{color:var(--hot);font-family:var(--head)}
+.stage{background:rgb(255 255 255 / .03);border:1px solid var(--line-d);padding:28px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.tabs button{font:inherit;font-size:14px;font-weight:700;color:var(--on-dark);border:1px solid rgb(255 255 255 / .25);background:transparent;padding:10px 16px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--hot);border-color:var(--hot);color:#140a03}
+.stage svg{width:100%;height:auto;display:block}
+.fr{fill:none;stroke:var(--on-dark);stroke-width:5;stroke-linejoin:round}
+.br{fill:none;stroke:var(--on-dark);stroke-width:3;opacity:.8}
+.post{fill:#2a2f36;stroke:var(--muted);stroke-width:2}
+.dim{stroke:var(--hot2);stroke-width:1.4;fill:none}
+.dt{font-family:var(--mono);font-size:15px;fill:var(--hot2)}
+.ground{stroke:rgb(255 255 255 / .2);stroke-width:2;stroke-dasharray:6 6}
+.rows{display:grid;gap:2px;margin-top:16px}
+.rows label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.rows output{color:var(--hot2)}
+input[type=range]{width:100%;accent-color:var(--hot);height:30px}
+.stage .btn{margin-top:18px;width:100%;text-align:center}
+
+/* products */
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.product{background:var(--paper);color:var(--ink);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px;padding:22px;text-decoration:none;display:flex;flex-direction:column;gap:14px}
+.product:hover{outline:3px solid var(--hot);outline-offset:-3px}
+.product .no{font-family:var(--mono);font-size:12px;color:#1d3b57}
+.product img{aspect-ratio:1.35;object-fit:contain;mix-blend-mode:multiply;transition:transform .3s}
+.product:hover img{transform:translateY(-4px)}
+.product h3{font-family:var(--head);font-size:16px;font-weight:800;text-transform:uppercase}
+.spec{font-family:var(--mono);font-size:12px;line-height:1.7;color:#3d4955;border-top:1px dashed #1d3b57;padding-top:10px}
+.spec b{color:#d4500f;font-weight:600}
+.product .go{margin-top:auto;font-weight:700;font-size:14px}
+
+/* works */
+.grid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:220px;gap:12px}
+.grid figure{position:relative;overflow:hidden;background:#222}
+.grid figure:nth-child(1){grid-column:span 3;grid-row:span 2}
+.grid figure:nth-child(2),.grid figure:nth-child(3){grid-column:span 3}
+.grid figure:nth-child(n+4){grid-column:span 2}
+.grid img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.grid figure:hover img{transform:scale(1.04)}
+.grid figcaption{position:absolute;left:0;bottom:0;right:0;padding:30px 14px 12px;font-family:var(--mono);font-size:12px;background:linear-gradient(transparent,rgb(0 0 0 / .78))}
+.more{font-family:var(--mono);font-size:13px;color:var(--hot2)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--hot)}
+.steps div{padding:24px 22px 0 0}
+.steps .n{font-family:var(--head);font-weight:800;font-size:44px;color:transparent;-webkit-text-stroke:1.5px var(--on-dark)}
+.steps h4{font-size:18px;margin:10px 0 6px}.steps p{color:#b9bec4;line-height:1.55;font-size:15px}
+
+/* order */
+.order{background:#1b1f25;position:relative;overflow:hidden}
+.order::before{content:"";position:absolute;right:-10%;bottom:-40%;width:60%;aspect-ratio:1;background:radial-gradient(circle,rgb(255 106 26 / .2),transparent 60%)}
+.order-in{position:relative;display:grid;grid-template-columns:1fr 1.2fr;gap:50px}
+.order h2 b{color:var(--hot)}
+.order .lead{margin-top:18px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+form label{display:grid;gap:6px;font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+input:not([type=range]):not([type=checkbox]),select,textarea{font:inherit;font-family:var(--body);font-size:16px;color:var(--on-dark);background:rgb(0 0 0 / .25);border:1px solid rgb(255 255 255 / .25);padding:14px;text-transform:none;letter-spacing:0;width:100%}
+select option{color:#111}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--hot);outline-offset:1px}
+.full{grid-column:1/-1}
+form .agree{display:flex;gap:10px;align-items:start;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:14px}
+
+/* footer stamp */
+footer{padding:40px var(--pad)}
+.stamp{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;border:1px solid rgb(255 255 255 / .25)}
+.stamp>div{padding:14px 16px;border-right:1px solid rgb(255 255 255 / .25)}
+.stamp>div:last-child{border-right:0}
+.stamp small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stamp .big{font-family:var(--head);font-weight:800;font-size:18px}
+.stamp p{font-size:14px;line-height:1.6;color:#cfd2d4}
+
+@media (max-width:900px){
+ .top nav{display:none}.tel{padding:8px 10px;font-size:13px}.logo{font-size:13px}
+ .hero .bg::after{background:linear-gradient(180deg,rgb(14 16 19 / .5),rgb(14 16 19 / .95) 62%)}
+ .hero h1 span{-webkit-text-stroke:1.4px var(--on-dark)}
+ .calc,.order-in{grid-template-columns:1fr;gap:30px}
+ .stage{padding:18px}
+ .products{grid-template-columns:1fr 1fr}
+ .grid{grid-template-columns:1fr 1fr;grid-auto-rows:150px}
+ .grid figure:nth-child(n){grid-column:span 1;grid-row:span 1}
+ .grid figure:nth-child(1){grid-column:span 2;grid-row:span 2}
+ .steps{grid-template-columns:1fr 1fr;gap:10px}
+ form{grid-template-columns:1fr}
+ .stamp{grid-template-columns:1fr}.stamp>div{border-right:0;border-bottom:1px solid rgb(255 255 255 / .25)}
+ section{padding-block:64px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+ <a class="logo" href="#">KARKAS<i>/</i>VOROT.BY</a>
+ <nav><a href="#raschet">Расчёт</a><a href="#izdeliya">Изделия</a><a href="#raboty">Работы</a><a href="#zayavka">Контакты</a></nav>
+ <a class="tel" href="tel:+375447726823">+375 44 772-68-23</a>
+</header>
+
+<section class="hero">
+ <div class="bg" role="img" aria-label="Сварные металлические каркасы в мастерской"></div>
+ <main>
+  <div class="tag kicker">Мастерская металлоконструкций · Минск</div>
+  <h1><span>Варим</span><br>ворота<br><b>под проём</b></h1>
+  <p class="lead">Каркасы откатных и распашных ворот, калитки, навесы и мебель. Изготовление в Минске, доставка и монтаж по всей Беларуси.</p>
+  <div class="cta"><a class="btn" href="#raschet">Указать размер проёма</a><a class="ghost" href="#raboty">Смотреть работы</a></div>
+ </main>
+ <div class="sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+ <div class="strip" aria-hidden="true"><div><span>Откатные ворота</span><em>✕</em><span>Распашные ворота</span><em>✕</em><span>Калитки</span><em>✕</em><span>Навесы</span><em>✕</em><span>Заборы</span><em>✕</em><span>Каркасы мебели</span><em>✕</em><span>Откатные ворота</span><em>✕</em><span>Распашные ворота</span><em>✕</em><span>Калитки</span><em>✕</em><span>Навесы</span><em>✕</em><span>Заборы</span><em>✕</em><span>Каркасы мебели</span><em>✕</em></div></div>
+</section>
+
+<section class="grid-bg" id="raschet">
+ <div class="calc">
+  <div>
+   <div class="tag">Расчёт под ваш проём</div>
+   <h2>Ворота<br>шириной <span class="w" id="hw">4,0</span> м?<br>Сварим.</h2>
+   <p class="lead">Выберите тип и двигайте ползунки — размеры попадут в заявку, мастер перезвонит и посчитает.</p>
+   <ul><li><b>A</b> — ширина проёма между столбами</li><li><b>B</b> — высота ворот</li><li>Не знаете точно — мастер подскажет по телефону</li></ul>
+  </div>
+  <div class="stage">
+   <div class="tabs" role="group" aria-label="Тип ворот"><button type="button" aria-pressed="true" data-t="slide">Откатные</button><button type="button" aria-pressed="false" data-t="swing">Распашные</button><button type="button" aria-pressed="false" data-t="wicket">Калитка</button></div>
+   <svg viewBox="0 0 760 300" role="img" aria-label="Схема каркаса с размерами"><line class="ground" x1="0" y1="250" x2="760" y2="250"/><g id="posts"></g><path class="fr" id="fr"/><path class="br" id="br"/><path class="dim" id="dmA"/><text class="dt" id="tA" text-anchor="middle"></text><path class="dim" id="dmB"/><text class="dt" id="tB" text-anchor="middle"></text></svg>
+   <div class="rows">
+    <label for="w"><span>A — ширина проёма</span><output id="wv">4,0 м</output></label><input id="w" type="range" min="1" max="7" step="0.1" value="4">
+    <label for="h"><span>B — высота</span><output id="hv">1,8 м</output></label><input id="h" type="range" min="1" max="2.5" step="0.1" value="1.8">
+   </div>
+   <a class="btn" id="go" href="#zayavka">Рассчитать ворота 4,0 × 1,8 м</a>
+  </div>
+ </div>
+</section>
+
+<section id="izdeliya">
+ <div class="head"><div><div class="tag">Изделия</div><h2>Что варим</h2></div><span class="tag" style="color:var(--muted)">Стоимость — по размеру и комплектации</span></div>
+ <div class="products">
+  <a class="product" href="#"><span class="no">01</span><img src="../../theme/karkasvorot/assets/catalog/karkas-otkatnyh-vorot.webp" alt="Каркас откатных ворот"><h3>Откатные ворота</h3><div class="spec">Труба <b>60×40×2</b><br>Грунтовка<br>Под ваш проём</div><span class="go">Подробнее</span></a>
+  <a class="product" href="#"><span class="no">02</span><img src="../../theme/karkasvorot/assets/catalog/karkas-raspashnyh-vorot.webp" alt="Каркас распашных ворот"><h3>Распашные ворота</h3><div class="spec">Труба <b>60×40×2</b><br>Грунтовка<br>Две створки</div><span class="go">Подробнее</span></a>
+  <a class="product" href="#"><span class="no">03</span><img src="../../theme/karkasvorot/assets/catalog/karkas-kalitki.webp" alt="Каркас калитки"><h3>Калитки</h3><div class="spec">Труба <b>60×40×2</b><br>Грунтовка<br>В пару к воротам</div><span class="go">Подробнее</span></a>
+  <a class="product" href="#"><span class="no">04</span><img src="../../theme/karkasvorot/assets/catalog/karkasy-mebeli.webp" alt="Каркасы мебели"><h3>Мебель и другое</h3><div class="spec">Труба <b>20×20×2</b> / <b>40×40×2</b><br>Столы, тумбы, обувницы<br>Навесы, заборы</div><span class="go">Подробнее</span></a>
+ </div>
+</section>
+
+<section class="grid-bg" id="raboty">
+ <div class="head"><div><div class="tag">Сделано в нашей мастерской</div><h2>Наши работы</h2></div><a class="more" href="#">Все работы →</a></div>
+ <div class="grid">
+  <figure><img src="../../tools/fixtures/uploads/2026/09/kovanye-vorota-s-kirpichnymi-stolbami.jpg" alt="Кованые ворота с калиткой"><figcaption>Кованые ворота с калиткой</figcaption></figure>
+  <figure><img src="../../tools/fixtures/uploads/2025/07/slider4.png" alt="Ворота из металлического штакетника"><figcaption>Ворота из штакетника</figcaption></figure>
+  <figure><img src="../../tools/fixtures/uploads/2025/07/slider2.jpg" alt="Забор с калиткой"><figcaption>Забор и калитка</figcaption></figure>
+  <figure><img src="../../tools/fixtures/uploads/2026/09/naves-dlya-mashin-karkas-vorot-by.jpg" alt="Навес для машины"><figcaption>Навес для машины</figcaption></figure>
+  <figure><img src="../../tools/fixtures/uploads/2025/07/slider7.jpg" alt="Каркасы мебели"><figcaption>Каркасы мебели</figcaption></figure>
+  <figure><img src="../../tools/fixtures/uploads/2026/09/sadovaya-bosedka-barbekyu-karkas.jpg" alt="Беседка с мангалом"><figcaption>Беседка с мангалом</figcaption></figure>
+ </div>
+</section>
+
+<section>
+ <div class="head"><div><div class="tag">Порядок работы</div><h2>От заявки до ворот</h2></div></div>
+ <div class="steps">
+  <div><div class="n">01</div><h4>Заявка</h4><p>Оставьте телефон и размеры, если знаете.</p></div>
+  <div><div class="n">02</div><h4>Звонок мастера</h4><p>Согласуем вид, высоту и длину каркаса, посчитаем стоимость.</p></div>
+  <div><div class="n">03</div><h4>Изготовление</h4><p>Варим каркас в мастерской в Минске, грунтуем.</p></div>
+  <div><div class="n">04</div><h4>Доставка и монтаж</h4><p>По всей Беларуси — условия согласуем при заказе.</p></div>
+ </div>
+</section>
+
+<section class="order" id="zayavka">
+ <div class="order-in">
+  <div><div class="tag">Расчёт бесплатно</div><h2>Пришлите размер —<br><b>посчитаем</b></h2><p class="lead">Мастер перезвонит, уточнит детали и назовёт стоимость. Viber и Telegram тоже подойдут.</p></div>
+  <form onsubmit="return false">
+   <label>Имя<input autocomplete="name"></label>
+   <label>Телефон *<input type="tel" placeholder="+375 29 123-45-67" required></label>
+   <label class="full">Изделие<select id="prod"><option>Каркас откатных ворот</option><option>Каркас распашных ворот</option><option>Калитка</option><option>Другое</option></select></label>
+   <label class="full">Размеры и комментарий<textarea id="msg" rows="3" placeholder="Размеры, город, пожелания"></textarea></label>
+   <label class="agree full"><input type="checkbox" required> Согласен на обработку персональных данных согласно политике</label>
+   <div class="full"><button class="btn">Отправить заявку</button></div>
+  </form>
+ </div>
+</section>
+
+<footer>
+ <div class="stamp">
+  <div><small>Изготовитель</small><div class="big">KARKASVOROT.BY</div><p>ИП Краснолобов Максим Валерьевич<br>УНП 191469362</p></div>
+  <div><small>Изделия</small><p>Откатные и распашные ворота<br>Калитки, навесы, заборы<br>Каркасы мебели</p></div>
+  <div><small>География</small><p>Изготовление — Минск<br>Доставка и монтаж — вся Беларусь</p></div>
+  <div><small>Связь</small><p><a href="tel:+375447726823">+375 44 772-68-23</a><br>Viber · Telegram<br>m.krasnolobov@gmail.com</p></div>
+ </div>
+</footer>
+
+<script src="b-c-calc.js"></script>
+</body>
+</html>

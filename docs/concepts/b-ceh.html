@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Концепция B — Цех</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1013;--ink:#f1efe9;--muted:#9aa0a6;--hot:#ff6a1a;--hot2:#ffb347}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,sans-serif}
+.hero{position:relative;min-height:100vh;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto}
+.bg{position:absolute;inset:0;background:url("../../tools/fixtures/uploads/2025/07/slider9.jpg") center/cover;filter:grayscale(.35) contrast(1.15) brightness(.55);transform:scale(1.08);animation:push 14s ease-out forwards}
+.bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgb(14 16 19 / .96) 0%,rgb(14 16 19 / .75) 45%,rgb(14 16 19 / .2) 100%),radial-gradient(60% 60% at 78% 70%,rgb(255 106 26 / .28),transparent 70%)}
+@keyframes push{to{transform:scale(1)}}
+header,main,.strip{position:relative}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 40px}
+.logo{font-family:"Unbounded",sans-serif;font-weight:800;font-size:15px;letter-spacing:.04em}
+.logo i{font-style:normal;color:var(--hot)}
+nav{display:flex;gap:30px;font-size:14px}
+nav a,header a{color:var(--ink);text-decoration:none}
+.tel{font-weight:700;border:1px solid rgb(255 255 255 / .25);padding:10px 16px}
+main{align-self:center;padding:0 40px;max-width:1100px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--hot2)}
+.kicker::before{content:"";width:34px;height:2px;background:var(--hot);box-shadow:0 0 14px var(--hot)}
+h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(40px,7vw,110px);line-height:.92;letter-spacing:-.03em;text-transform:uppercase;margin:22px 0}
+h1 span{color:transparent;-webkit-text-stroke:2px var(--ink)}
+h1 b{color:var(--hot);text-shadow:0 0 40px rgb(255 106 26 / .45)}
+.lead{font-size:19px;line-height:1.55;color:#cfd2d4;max-width:36ch}
+.cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+.btn{background:var(--hot);color:#140a03;font-weight:700;padding:19px 28px;text-decoration:none;font-size:16px}
+.btn:hover{background:var(--hot2)}
+.ghost{color:var(--ink);padding:19px 22px;text-decoration:none;border:1px solid rgb(255 255 255 / .3)}
+.sparks{position:absolute;right:16%;bottom:24%;width:2px;height:2px}
+.sparks i{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--hot2);box-shadow:0 0 8px var(--hot);animation:spark 1.6s linear infinite;opacity:0}
+.sparks i:nth-child(2){animation-delay:.3s;--dx:-90px}.sparks i:nth-child(3){animation-delay:.7s;--dx:60px}.sparks i:nth-child(4){animation-delay:1s;--dx:-40px}.sparks i:nth-child(5){animation-delay:1.3s;--dx:110px}
+@keyframes spark{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--dx,80px),120px);opacity:0}}
+.strip{border-top:1px solid rgb(255 255 255 / .12);overflow:hidden;white-space:nowrap;font-family:"Unbounded",sans-serif;font-weight:500;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.strip div{display:inline-block;padding:18px 0;animation:run 30s linear infinite}
+.strip span{margin:0 26px}.strip em{font-style:normal;color:var(--hot)}
+@keyframes run{to{transform:translateX(-50%)}}
+@media (max-width:860px){nav{display:none}header{padding:16px 18px}main{padding:0 18px}.tel{padding:8px 10px;font-size:13px}.bg::after{background:linear-gradient(180deg,rgb(14 16 19 / .55),rgb(14 16 19 / .95) 60%)}h1 span{-webkit-text-stroke:1.4px var(--ink)}}
+@media (prefers-reduced-motion:reduce){.bg,.strip div,.sparks i{animation:none}}
+</style>
+</head>
+<body>
+<section class="hero">
+ <div class="bg" role="img" aria-label="Сварные металлические каркасы в мастерской"></div>
+ <header><span class="logo">KARKAS<i>/</i>VOROT.BY</span><nav><a href="#">Откатные</a><a href="#">Распашные</a><a href="#">Калитки</a><a href="#">Работы</a></nav><a class="tel" href="tel:+375447726823">+375 44 772-68-23</a></header>
+ <main>
+  <div class="kicker">Мастерская металлоконструкций · Минск</div>
+  <h1><span>Варим</span><br>ворота<br><b>под проём</b></h1>
+  <p class="lead">Каркасы откатных и распашных ворот, калитки, навесы и мебель. Доставка и монтаж по всей Беларуси.</p>
+  <div class="cta"><a class="btn" href="#">Рассчитать мои ворота</a><a class="ghost" href="#">Смотреть работы</a></div>
+ </main>
+ <div class="sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+ <div class="strip" aria-hidden="true"><div><span>Откатные ворота</span><em>✕</em><span>Распашные ворота</span><em>✕</em><span>Калитки</span><em>✕</em><span>Навесы</span><em>✕</em><span>Заборы</span><em>✕</em><span>Каркасы мебели</span><em>✕</em><span>Откатные ворота</span><em>✕</em><span>Распашные ворота</span><em>✕</em><span>Калитки</span><em>✕</em><span>Навесы</span><em>✕</em><span>Заборы</span><em>✕</em><span>Каркасы мебели</span><em>✕</em></div></div>
+</section>
+</body>
+</html>
