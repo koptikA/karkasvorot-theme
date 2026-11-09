@@ -1,0 +1,31 @@
+/* KARKASVOROT: order form and cookie banner. Tokens from :root in site.css. */
+.kv-order { padding: var(--kv-space-6) 0; background: var(--kv-surface); }
+.kv-form { max-width: 48rem; margin: 0 auto; scroll-margin-top: calc(var(--kv-header-h) + var(--kv-space-3)); }
+.kv-form__title { margin: 0 0 var(--kv-space-2); font-size: var(--kv-fs-h2); line-height: var(--kv-lh-tight); }
+.kv-form__lead { margin: 0 0 var(--kv-space-4); color: var(--kv-muted); }
+.kv-form__grid { display: grid; gap: var(--kv-space-3); grid-template-columns: 1fr; }
+@media (min-width: 40rem) { .kv-form__grid { grid-template-columns: repeat(3, 1fr); } .kv-form__field--wide { grid-column: 1 / -1; } }
+.kv-form__field { margin: 0; }
+.kv-form__label { display: block; margin-bottom: var(--kv-space-1); font-weight: 600; }
+.kv-form__req { font-weight: 400; color: var(--kv-muted); font-size: var(--kv-fs-small); }
+.kv-form__input { box-sizing: border-box; width: 100%; min-height: 2.75rem; padding: var(--kv-space-2) var(--kv-space-3); border: 1px solid var(--kv-muted); border-radius: var(--kv-radius); background: var(--kv-bg); color: var(--kv-text); font: inherit; }
+.kv-form__input[aria-invalid="true"], .kv-form__check[aria-invalid="true"] { border-color: #b3261e; outline: 2px solid #b3261e; outline-offset: 0; }
+.kv-form__error { margin: var(--kv-space-1) 0 0; color: #b3261e; font-size: var(--kv-fs-small); font-weight: 600; }
+.kv-form__consent { display: grid; grid-template-columns: auto 1fr; gap: var(--kv-space-2); align-items: start; margin: var(--kv-space-4) 0; }
+.kv-form__consent .kv-form__error { grid-column: 1 / -1; }
+.kv-form__check { width: 1.25rem; height: 1.25rem; margin: 0.15rem 0 0; accent-color: var(--kv-accent-text); }
+.kv-form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.kv-form__submit, .kv-cookie__btn { min-height: 2.75rem; padding: var(--kv-space-2) var(--kv-space-4); border: 0; border-radius: var(--kv-radius); background: var(--kv-accent); color: var(--kv-on-accent); font: inherit; font-weight: 700; cursor: pointer; }
+.kv-form__success, .kv-form__summary { margin: 0 0 var(--kv-space-4); padding: var(--kv-space-3); border-radius: var(--kv-radius); }
+.kv-form__success { background: #e6f4ea; color: #14532d; font-weight: 600; }
+.kv-form__summary { background: #fdecea; color: #7a1a14; }
+.kv-form__summary p, .kv-form__summary ul { margin: 0; }
+.kv-form__summary a { color: inherit; }
+.kv-cookie { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: var(--kv-space-3) 0; background: var(--kv-dark); color: var(--kv-on-dark); }
+.kv-cookie[hidden] { display: none; }
+.kv-cookie__inner { display: flex; flex-wrap: wrap; gap: var(--kv-space-3); align-items: center; justify-content: space-between; }
+.kv-cookie__text { flex: 1 1 28rem; margin: 0; font-size: var(--kv-fs-small); }
+.kv-cookie__text a { color: inherit; }
+.kv-cookie__actions { display: flex; gap: var(--kv-space-2); }
+.kv-cookie__btn--decline { background: transparent; color: var(--kv-on-dark); box-shadow: inset 0 0 0 1px var(--kv-on-dark); }
+@media (max-width: 47.99rem) { .kv-cookie { bottom: var(--kv-mobilebar-h); } }
