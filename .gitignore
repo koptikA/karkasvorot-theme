@@ -5,3 +5,8 @@ node_modules/
 __pycache__/
 .DS_Store
 .autopilot/serve.*
+# WordPress Playground temp files
+.playground/
+.wordpress-playground/
+wordpress/
+*.log

@@ -30,3 +30,13 @@
 **Cookie-согласие:** `localStorage['kv_consent']` = `'yes'|'no'`; Метрика вставляется JS-ом только при `'yes'`. ID берётся из `<body data-metrika="…">`.
 
 **Шов тестов один:** HTTP-ответы Playground-сайта, проверяемые `tools/check_site.py`.
+
+## Из таска 01 — каркас темы и стенд
+
+- **Стенд:** `bash tools/serve.sh` (Git Bash, из корня проекта): PHP 7.4, WP latest, ru_RU, WP_DEBUG виден в HTML, тема примонтирована вживую, каждый запуск собирает сайт с нуля, готов после «Ready!» в логе; админ `admin`/`password`. Запускать в фоне, по окончании останавливать.
+- **PHP на стенде:** `python tools/stand.py php '<код без <?php>'`. Из Python: `from stand import fetch, admin_session, run_php`; `fetch(url, opener=None, data=None, follow=True) -> (status, body, final_url)`, `admin_session(base) -> OpenerDirector|None`, `run_php(base, code) -> str` (стендовый `/kv-run.php`, только POST с 127.0.0.1).
+- **Проверки:** `python tools/check_site.py http://127.0.0.1:9400`; модуль `tools/checks/<имя>.py` выставляет `check(base, s) -> list[str]`, где `s` — urllib `OpenerDirector` с cookie админа или `None` (**не** requests). Сейчас модули: base, theme_model, fixtures.
+- **settings:** `kv_opt($key, $default='')` — ключи `phone, viber, telegram, email, hours, org_name, unp, address, registration, metrika_id, yandex_verification, google_verification` (theme_mod `kv_<key>`); `email` — и адрес заявок, и публичный в подвале. `kv_phone_href()`, `kv_telegram_href()`, `kv_is_placeholder($key)`, `kv_settings_fields()`. Секции Customizer: `kv_contacts`, `kv_requisites`, `kv_analytics`.
+- **content-model:** `kv_service_pages()`, `kv_service_price($id)`, `kv_works($service_id=0, $limit=12, $section='')`, `kv_other_sections()` → якоря `mebel, obuvnicy, zabory, navesy`; `kv_faq_from_text()`/`kv_faq_to_text()`, `kv_set_meta()`. Метабокс услуги: nonce `kv_service_nonce`/`kv_service_meta`, поля `kv_price_from, kv_includes, kv_illustration, kv_term, kv_warranty, kv_faq, kv_prices[anchor]`. Метабокс работы: `kv_work_nonce`/`kv_work_meta`, поля `kv_service, kv_section, kv_city`. Метабокс услуги виден только после сохранения страницы с шаблоном «Услуга».
+- **Шаблоны:** `kv_contact_link($type, $class, $label='')` (`phone|viber|telegram`, ставит `data-goal`), `kv_footer_field($key, $label)`, `kv_menu_fallback()`, `template-parts/card.php`; размеры `kv-card` 640×480, `kv-wide` 1280×720; меню `primary`, `footer`; `<main id="content">`. Мобильная панель «Заявка» → `#zayavka` (якорь даёт форма из таска 03 — форма должна быть на каждой странице).
+- **Ассеты:** `assets/site.css`, `assets/site.js`, шрифт Manrope вариативный (`manrope-cyrillic.woff2`, `manrope-latin.woff2`); CSS+JS сейчас 9.7 КБ.

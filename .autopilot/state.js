@@ -11,7 +11,7 @@ window.STATE =
   "memoryFile": "CLAUDE.md",
   "skillDir": "C:/Users/User/.claude/skills/autopilot",
   "startedAt": "2026-11-09T12:40:31+03:00",
-  "updatedAt": "2026-11-09T12:54:10+03:00",
+  "updatedAt": "2026-11-09T13:11:02+03:00",
   "finishedAt": null,
   "stages": [
     {
@@ -52,7 +52,8 @@ window.STATE =
     },
     {
       "id": "review",
-      "status": "pending"
+      "status": "active",
+      "startedAt": "2026-11-09T13:11:02+03:00"
     },
     {
       "id": "final",
@@ -85,10 +86,11 @@ window.STATE =
         "theme/karkasvorot/",
         "tools/"
       ],
-      "status": "pending",
+      "status": "review",
       "retries": 0,
       "repairs": 0,
-      "handoffs": 0
+      "handoffs": 0,
+      "startedAt": "2026-11-09T12:54:19+03:00"
     },
     {
       "id": "02",
@@ -202,10 +204,14 @@ window.STATE =
     "fixed": 7,
     "deferred": 0
   },
-  "concerns": [],
+  "concerns": [
+    "footer.php:33-43 — заголовок «Реквизиты» выводится посетителю при пустом списке (R14i) → таск 05",
+    "Manrope вариативный (кир.+лат., 38 КБ) вместо 2 начертаний — отклонение принято",
+    "inc/seo.php — kv_seo_plugin_active уже рабочая, таск 04 владеет ей"
+  ],
   "reviewers": {
-    "manifestSpec": null,
-    "craft": null
+    "manifestSpec": "rev-ms",
+    "craft": "rev-craft"
   },
   "blind": null
 }

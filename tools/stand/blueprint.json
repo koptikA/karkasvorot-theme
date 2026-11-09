@@ -1,0 +1,13 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"preferredVersions": { "php": "7.4", "wp": "latest" },
+	"steps": [
+		{ "step": "defineWpConfigConsts", "consts": { "WP_DEBUG": true, "WP_DEBUG_DISPLAY": true } },
+		{ "step": "setSiteLanguage", "language": "ru_RU" },
+		{ "step": "setSiteOptions", "options": { "permalink_structure": "/%postname%/", "blogname": "KARKASVOROT.BY", "timezone_string": "Europe/Minsk" } },
+		{ "step": "cp", "fromPath": "/kv-stand/run.php", "toPath": "/wordpress/kv-run.php" },
+		{ "step": "runPHP", "code": "<?php require '/kv-stand/seed.php';" },
+		{ "step": "activateTheme", "themeFolderName": "karkasvorot" },
+		{ "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; echo 'theme: ' . get_stylesheet();" }
+	]
+}
