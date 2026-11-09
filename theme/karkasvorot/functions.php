@@ -73,7 +73,11 @@ function kv_contact_link( string $type, string $class, string $label = '' ): str
 	}
 	list( $href, $text, $goal ) = $links[ $type ];
 	$external = 'telegram' === $type ? ' target="_blank" rel="noopener"' : '';
-	return '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $href, array( 'tel', 'viber', 'https' ) ) . '" data-goal="' . esc_attr( $goal ) . '"' . $external . '>' . esc_html( '' !== $label ? $label : $text ) . '</a>';
+	$icon = '';
+	if ( 'phone' === $type && preg_match( '/kv-header__phone|kv-footer__link|kv-mobilebar__link/', $class ) ) {
+		$icon = file_get_contents( KV_DIR . '/assets/icons/phone.svg' ); // Trusted, bundled static SVG.
+	}
+	return '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $href, array( 'tel', 'viber', 'https' ) ) . '" data-goal="' . esc_attr( $goal ) . '"' . $external . '>' . $icon . esc_html( '' !== $label ? $label : $text ) . '</a>';
 }
 
 /**

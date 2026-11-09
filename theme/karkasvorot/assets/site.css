@@ -576,3 +576,14 @@ input, select, textarea, button { font: inherit; }
  .kv-footer__navigation { grid-row: 3; }
  .kv-footer__col:nth-child(4) { grid-row: 4; }
 }
+
+/* Owner-supplied icons: original square frames, one colour and consistent hit areas. */
+.kv-contact-icon { display: block; width: 32px; height: 32px; flex-shrink: 0; }
+.kv-social, .kv-footer .kv-social { border-radius: var(--kv-radius); background: transparent; box-shadow: none; color: var(--kv-text); }
+.kv-social:hover, .kv-footer .kv-social:hover { background: transparent; color: var(--kv-accent-text); }
+.kv-header__phone, .kv-footer__link[data-goal="phone_click"] { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; }
+.kv-header__phone:hover, .kv-footer__link[data-goal="phone_click"]:hover { color: var(--kv-accent-text); }
+.kv-mobilebar__link--phone { display: flex; flex-direction: column; justify-content: center; gap: .1rem; }
+.kv-mobilebar__link--phone .kv-contact-icon { width: 25px; height: 25px; }
+.kv-mobilebar .kv-social { color: var(--kv-on-dark); }
+.kv-mobilebar .kv-social:hover { color: var(--kv-accent); background: transparent; }
