@@ -31,8 +31,8 @@
             </ul>
 		</nav>
         <div class="kv-header__contacts">
-            <?php echo kv_contact_link( 'phone', 'kv-header__phone' ); ?>
             <?php get_template_part( 'template-parts/social-links' ); ?>
+            <?php echo kv_contact_link( 'phone', 'kv-header__phone' ); ?>
         </div>
 	</div>
 </header>
