@@ -1,0 +1,13 @@
+{
+  "keyboardOpen": true,
+  "escapeClose": true,
+  "outsideClick": true,
+  "mobileEscape": true,
+  "widths": [
+    320,
+    390,
+    900,
+    1024,
+    1440
+  ]
+}

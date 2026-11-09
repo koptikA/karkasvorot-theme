@@ -5,6 +5,11 @@
 $kv_work = $args['work'];
 $kv_img  = get_post_thumbnail_id( $kv_work );
 $kv_name = get_the_title( $kv_work );
+if ( ! empty( $args['short_caption'] ) || false !== stripos( $kv_name, 'karkasvorot.by' ) ) {
+	$kv_asset = kv_catalog_image( (int) $kv_img );
+	if ( $kv_asset ) { $kv_name = $kv_asset['alt']; }
+	if ( 'Кованые ворота с калиткой и кирпичными столбами' === $kv_name ) { $kv_name = 'Кованые ворота с калиткой'; }
+}
 ?>
 <figure class="kv-work">
 	<?php if ( $kv_img ) : ?>

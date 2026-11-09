@@ -75,5 +75,26 @@ fs.mkdirSync(out,{recursive:true});
  if(external.length)throw Error('Unexpected external requests (blocked): '+external.join(','));
  fs.writeFileSync(path.join(out,'index.json'),JSON.stringify(index,null,2)+'\n');
  fs.writeFileSync(path.join(root,'docs','reports','browser.json'),JSON.stringify({screens:index.length,widths:[390,1440],horizontalOverflow:false,jsErrors:errors,externalRequests:external,menuEscape:true,consentWithdrawal:true,successGoalOnce:true},null,2)+'\n');
+
+ // Compact header: keyboard disclosure, outside click, mobile Escape, narrow widths.
+ await page.setViewportSize({width:1440,height:900});await page.goto(base);
+ const products=page.locator('.kv-products__dropdown');
+ await products.locator('summary').focus();await page.keyboard.press('Enter');
+ if(!await products.evaluate(e=>e.open))throw Error('Product menu did not open by keyboard');
+ await page.screenshot({path:path.join(out,'header-products-1440.png')});
+ await page.keyboard.press('Escape');
+ if(await products.evaluate(e=>e.open))throw Error('Product menu Escape failed');
+ await products.locator('summary').click();await page.locator('h1').click();
+ if(await products.evaluate(e=>e.open))throw Error('Product menu outside click failed');
+ for(const width of [320,390,900,1024]){
+  await page.setViewportSize({width,height:900});
+  if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1))throw Error('Header overflow '+width);
+ }
+ await page.setViewportSize({width:390,height:900});
+ await burger.click();await products.locator('summary').click();
+ await page.screenshot({path:path.join(out,'header-products-390.png')});
+ await page.keyboard.press('Escape');
+ if(await products.evaluate(e=>e.open) || await burger.getAttribute('aria-expanded')!=='false')throw Error('Mobile menu Escape failed');
+ fs.writeFileSync(path.join(root,'docs','reports','header.json'),JSON.stringify({keyboardOpen:true,escapeClose:true,outsideClick:true,mobileEscape:true,widths:[320,390,900,1024,1440]},null,2)+'\n');
  await browser.close();console.log('Browser checks passed.');
 })().catch(e=>{console.error(e);process.exit(1);});

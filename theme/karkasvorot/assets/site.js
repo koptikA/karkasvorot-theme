@@ -79,3 +79,18 @@
 	var msg = done || document.querySelector('.kv-form__summary');
 	if (msg && location.hash === '#zayavka') msg.focus();
 })();
+
+/* Product disclosure: native keyboard activation, outside click and Escape. */
+(function () {
+ var dropdown = document.querySelector('.kv-products__dropdown');
+ if (!dropdown) return;
+ document.addEventListener('click', function (e) {
+  if (!dropdown.contains(e.target) || e.target.closest('.kv-products__list a')) dropdown.open = false;
+ });
+ document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && dropdown.open) {
+   dropdown.open = false;
+   if (!window.matchMedia('(max-width:56rem)').matches) dropdown.querySelector('summary').focus();
+  }
+ });
+})();

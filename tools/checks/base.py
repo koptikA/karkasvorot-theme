@@ -18,7 +18,7 @@ def check(base, s):
     if status != 200:
         return ["главная: статус %s" % status]
     header = _part(html, "header")
-    for needle, what in (("tel:+375447726823", "телефон"), ("viber://", "Viber"), ("t.me/", "Telegram"), ("Минск", "«Минск»")):
+    for needle, what in (("tel:+375447726823", "телефон"), ("viber://", "Viber"), ("t.me/", "Telegram")):
         if needle not in header:
             fails.append("в шапке нет: %s (%s)" % (what, needle))
     for goal in ("phone_click", "viber_click", "telegram_click"):
@@ -36,6 +36,15 @@ def check(base, s):
         fails.append("в подвале шаблонное «источник: URL»")
     if re.search(r">\s*Реквизиты\s*<", footer):
         fails.append("посетителю виден заголовок «Реквизиты» при пустых реквизитах")
+    # Region moved out of the compact header by owner-approved design.
+    if "Минск" not in _part(html, "main"):
+        fails.append("главная: нет региона работы")
+    if '<details class="kv-products__dropdown">' not in header:
+        fails.append("шапка: нет группы продукции")
+    for part, label in ((header, "шапка"), (footer, "подвал")):
+        for messenger in ("Viber", "Telegram"):
+            if 'aria-label="Написать в %s"' % messenger not in part:
+                fails.append(label + ": нет доступной иконки " + messenger)
     if "Минская область" not in footer:
         fails.append("в подвале нет зоны работы «Минская область»")
     if not re.search(r'<html[^>]+lang="ru(-RU)?"', html):

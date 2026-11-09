@@ -4,22 +4,23 @@
 		<div class="kv-footer__col">
 			<p class="kv-footer__logo">KARKASVOROT.BY</p>
 			<p class="kv-footer__region">Минск и Минская область, доставка каркасов по Беларуси</p>
-			<?php
-			wp_nav_menu( array(
-				'theme_location' => 'footer',
-				'container'      => 'nav',
-				'container_aria_label' => 'Меню в подвале',
-				'menu_class'     => 'kv-footer__menu',
-				'depth'          => 1,
-				'fallback_cb'    => false,
-			) );
-			?>
+
 		</div>
+        <nav class="kv-footer__col kv-footer__navigation" aria-label="Разделы сайта">
+            <h2 class="kv-footer__title">Продукция</h2>
+            <ul class="kv-footer__list">
+            <?php foreach ( kv_service_pages() as $kv_page ) : ?>
+                <li><a href="<?php echo esc_url( get_permalink( $kv_page ) ); ?>"><?php echo esc_html( get_the_title( $kv_page ) ); ?></a></li>
+            <?php endforeach; ?>
+                <li><a href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>">Наши работы</a></li>
+                <li><a href="<?php echo esc_url( home_url( '/kontakty/' ) ); ?>">Контакты</a></li>
+            </ul>
+        </nav>
 		<div class="kv-footer__col">
 			<h2 class="kv-footer__title">Контакты</h2>
 			<ul class="kv-footer__list">
 				<?php
-				foreach ( array( 'phone', 'viber', 'telegram' ) as $kv_type ) {
+				foreach ( array( 'phone' ) as $kv_type ) {
 					$kv_link = kv_contact_link( $kv_type, 'kv-footer__link' );
 					if ( '' !== $kv_link ) {
 						echo '<li class="kv-footer__item">' . $kv_link . '</li>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside.
@@ -29,6 +30,7 @@
 				kv_footer_field( 'hours', 'Часы работы' );
 				?>
 			</ul>
+			<?php get_template_part( 'template-parts/social-links' ); ?>
 		</div>
 		<?php if ( current_user_can( 'manage_options' ) || '' !== kv_opt( 'org_name' ) . kv_opt( 'unp' ) . kv_opt( 'address' ) . kv_opt( 'registration' ) ) : ?>
 		<div class="kv-footer__col">
@@ -55,8 +57,7 @@
 <nav class="kv-mobilebar" aria-label="Быстрая связь">
 	<?php
 	echo kv_contact_link( 'phone', 'kv-mobilebar__link kv-mobilebar__link--phone', 'Позвонить' ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside.
-	echo kv_contact_link( 'viber', 'kv-mobilebar__link kv-mobilebar__link--viber' ); // phpcs:ignore WordPress.Security.EscapeOutput
-	echo kv_contact_link( 'telegram', 'kv-mobilebar__link kv-mobilebar__link--telegram' ); // phpcs:ignore WordPress.Security.EscapeOutput
+	get_template_part( 'template-parts/social-links' );
 	?>
 	<a class="kv-mobilebar__link kv-mobilebar__link--order" href="#zayavka">Заявка</a>
 </nav>

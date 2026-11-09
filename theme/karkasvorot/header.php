@@ -15,24 +15,25 @@
 			<span class="kv-header__burger-icon" aria-hidden="true"></span><span class="kv-visually-hidden">Меню</span>
 		</button>
 		<nav id="kv-nav" class="kv-header__nav" aria-label="Главное меню">
-			<?php
-			wp_nav_menu( array(
-				'theme_location' => 'primary',
-				'container'      => false,
-				'menu_class'     => 'kv-menu',
-				'depth'          => 2,
-				'fallback_cb'    => 'kv_menu_fallback',
-			) );
-			?>
+            <ul class="kv-menu kv-menu--compact">
+                <li class="kv-products">
+                    <details class="kv-products__dropdown">
+                        <summary>Продукция <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></summary>
+                        <ul class="kv-products__list">
+                            <?php foreach ( kv_service_pages() as $kv_page ) : ?>
+                                <li><a href="<?php echo esc_url( get_permalink( $kv_page ) ); ?>"<?php if ( is_page( $kv_page->ID ) ) { echo ' aria-current="page"'; } ?>><?php echo esc_html( get_the_title( $kv_page ) ); ?></a></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>">Наши работы</a></li>
+                <li><a href="<?php echo esc_url( home_url( '/kontakty/' ) ); ?>">Контакты</a></li>
+            </ul>
 		</nav>
-		<div class="kv-header__contacts">
-			<?php
-			echo kv_contact_link( 'phone', 'kv-header__phone' ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside.
-			echo kv_contact_link( 'viber', 'kv-header__msg kv-header__msg--viber' ); // phpcs:ignore WordPress.Security.EscapeOutput
-			echo kv_contact_link( 'telegram', 'kv-header__msg kv-header__msg--telegram' ); // phpcs:ignore WordPress.Security.EscapeOutput
-			?>
-			<span class="kv-header__region">Минск и Минская область</span>
-		</div>
+        <div class="kv-header__contacts">
+            <?php echo kv_contact_link( 'phone', 'kv-header__phone' ); ?>
+            <?php get_template_part( 'template-parts/social-links' ); ?>
+        </div>
 	</div>
 </header>
 <main id="content" class="kv-main" tabindex="-1">

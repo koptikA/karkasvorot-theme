@@ -14,7 +14,7 @@ $kv_uri = get_template_directory_uri();
   </div>
   <figure class="kv-intro__photo">
    <img src="<?php echo esc_url( $kv_uri . '/assets/work-gates.webp' ); ?>" width="516" height="265" alt="Ворота с калиткой из металлоштакетника — выполненная работа" fetchpriority="high" loading="eager">
-   <figcaption><span>Сделано в нашей мастерской</span><span aria-hidden="true">↗</span></figcaption>
+   <figcaption><span>Сделано в нашей мастерской</span></figcaption>
   </figure>
  </section>
  <section class="kv-select" aria-labelledby="kv-select-title">
@@ -37,7 +37,7 @@ $kv_uri = get_template_directory_uri();
  <section class="kv-showcase" id="raboty" aria-labelledby="kv-showcase-title">
   <div class="kv-home-heading"><div><p class="kv-eyebrow">Из металла — в жизнь</p><h2 id="kv-showcase-title">Вот что получается.</h2></div><a href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>">Все работы <span aria-hidden="true">↗</span></a></div>
   <div class="kv-showcase__grid">
-   <?php foreach ( kv_works( 0, 3 ) as $kv_work ) { get_template_part( 'template-parts/work-card', null, array( 'work' => $kv_work ) ); } ?>
+   <?php foreach ( kv_works( 0, 3 ) as $kv_work ) { get_template_part( 'template-parts/work-card', null, array( 'work' => $kv_work, 'short_caption' => true ) ); } ?>
   </div>
  </section>
  <section class="kv-process" aria-labelledby="kv-process-title">
