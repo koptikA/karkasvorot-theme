@@ -243,7 +243,9 @@ function kv_install(): array {
 		}
 		$alt   = trim( (string) get_post_meta( $att, '_wp_attachment_image_alt', true ), " \"'«»" );
 		$title = '' !== $alt ? $alt : get_the_title( $att );
-		$id    = wp_insert_post( wp_slash( array( 'post_type' => 'work', 'post_status' => 'publish', 'post_title' => $title, 'menu_order' => $order ) ) );
+		$names = kv_catalog_images();
+		if ( preg_match( '/^slider\d+$/i', $title ) && isset( $names[ $file ] ) ) { $title = $names[ $file ][1]; }
+		$id    = wp_insert_post( wp_slash( array( 'post_type' => 'work', 'post_status' => 'publish', 'post_title' => $title, 'post_name' => isset( $names[ $file ] ) ? $names[ $file ][0] : '', 'menu_order' => $order ) ) );
 		if ( ! $id || is_wp_error( $id ) ) {
 			continue;
 		}
@@ -270,6 +272,7 @@ function kv_install(): array {
 	}
 
 	update_option( 'kv_install_report', $report + array( 'attention' => $attention, 'time' => current_time( 'mysql' ) ), false );
+	kv_refresh_imported_work_names();
 	update_option( 'kv_install_version', KV_VERSION, false );
 	return $report;
 }

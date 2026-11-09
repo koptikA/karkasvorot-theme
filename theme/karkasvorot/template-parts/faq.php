@@ -13,7 +13,7 @@ if ( ! is_array( $kv_faq ) || ! $kv_faq ) {
 		<?php if ( isset( $kv_item['q'], $kv_item['a'] ) ) : ?>
 			<details class="kv-faq__item">
 				<summary class="kv-faq__q"><?php echo esc_html( $kv_item['q'] ); ?></summary>
-				<div class="kv-faq__a"><?php echo wp_kses_post( wpautop( $kv_item['a'] ) ); ?></div>
+				<div class="kv-faq__a"><?php echo wp_kses_post( wpautop( kv_public_faq_answer( (string) $kv_item['a'] ) ) ); ?></div>
 			</details>
 		<?php endif; ?>
 	<?php endforeach; ?>

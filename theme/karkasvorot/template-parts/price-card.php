@@ -1,6 +1,6 @@
 <?php
 /**
- * Price card of a service page: illustration, «от N BYN» (empty → «цена по запросу»), «Что входит».
+ * Service card: illustration, individual quote, included materials.
  * $args: page (WP_Post), heading (tag), title (text), link (bool), first (bool — above the fold: no lazy, high priority).
  */
 $kv_page  = $args['page'];
@@ -15,7 +15,7 @@ $kv_url   = ! empty( $args['link'] ) ? get_permalink( $kv_page ) : '';
 		<div class="kv-price__media">
 			<?php
 			$kv_alt = (string) get_post_meta( $kv_ill, '_wp_attachment_image_alt', true );
-			$kv_att = array( 'class' => 'kv-price__img', 'alt' => '' !== $kv_alt ? $kv_alt : 'Чертёж: ' . get_the_title( $kv_page ) );
+			$kv_att = array( 'class' => 'kv-price__img', 'alt' => '' !== $kv_alt ? $kv_alt : 'Иллюстрация: ' . get_the_title( $kv_page ) );
 			$kv_att += ! empty( $args['first'] ) ? array( 'loading' => false, 'fetchpriority' => 'high' ) : array( 'loading' => 'lazy' );
 			echo wp_get_attachment_image( $kv_ill, 'kv-card', false, $kv_att );
 			?>
@@ -29,10 +29,10 @@ $kv_url   = ! empty( $args['link'] ) ? get_permalink( $kv_page ) : '';
 		<?php endif; ?>
 	</<?php echo tag_escape( $kv_tag ); ?>>
 	<p class="kv-price__value">
-		<?php if ( '' !== $kv_price['from'] ) : ?>
+		<?php if ( kv_public_prices_enabled() && '' !== $kv_price['from'] ) : ?>
 			от <strong><?php echo esc_html( $kv_price['from'] ); ?></strong> BYN
 		<?php else : ?>
-			Цена по запросу
+			Стоимость по запросу
 		<?php endif; ?>
 	</p>
 	<?php if ( $kv_price['includes'] ) : ?>

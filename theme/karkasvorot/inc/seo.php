@@ -46,6 +46,7 @@ function kv_seo_name( int $id ): string {
 
 /** First number of the «Цена от» field: «1000 (проём 3×1,5 м)» → 1000, «800–1200» → 800, «1 000» → 1000; '' if none. */
 function kv_seo_price( int $id ): string {
+	if ( ! kv_public_prices_enabled() ) { return ''; }
 	return preg_match( '/\d[\d\x{00A0} ]*(?:[.,]\d+)?/u', kv_service_price( $id )['from'], $m ) ? str_replace( ',', '.', preg_replace( '/[\x{00A0} ]/u', '', $m[0] ) ) : '';
 }
 

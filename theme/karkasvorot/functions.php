@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
 define( 'KV_VERSION', '1.0.0' );
 define( 'KV_DIR', get_template_directory() );
 
-foreach ( array( 'settings', 'content-model', 'installer', 'leads', 'seo' ) as $kv_module ) {
+foreach ( array( 'settings', 'content-model', 'catalog', 'installer', 'leads', 'seo' ) as $kv_module ) {
 	require_once KV_DIR . '/inc/' . $kv_module . '.php';
 }
 

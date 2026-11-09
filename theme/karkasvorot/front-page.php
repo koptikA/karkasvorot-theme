@@ -22,7 +22,7 @@ get_header();
 	<?php $kv_services = kv_service_pages(); ?>
 	<?php if ( $kv_services ) : ?>
 		<section class="kv-prices" aria-labelledby="kv-prices-title">
-			<h2 id="kv-prices-title">Цены</h2>
+			<h2 id="kv-prices-title">Изделия на заказ</h2>
 			<div class="kv-prices__grid">
 				<?php
 				foreach ( $kv_services as $kv_i => $kv_page ) {

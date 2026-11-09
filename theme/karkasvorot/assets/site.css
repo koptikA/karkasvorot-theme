@@ -406,3 +406,9 @@ input, select, textarea, button { font: inherit; }
 .kv-hero__image { position: absolute; z-index: -2; right: 0; top: 0; width: 43%; height: 100%; object-fit: cover; }
 @media (max-width:56rem) { .kv-hero__image { width: 40%; opacity: .35; } }
 @media (max-width:36rem) { .kv-hero__image { width: 100%; height: 12rem; top: auto; bottom: 0; opacity: 1; object-position: center 65%; } }
+
+/* Catalogue illustrations are examples, separate from real project photography. */
+.kv-price__img { mix-blend-mode: normal; }
+.kv-price__value { font-weight: 600; color: var(--kv-accent-text); font-size: .9rem; }
+.kv-price__media { padding: .75rem; }
+.kv-service__price .kv-price__media { padding: 1rem; }

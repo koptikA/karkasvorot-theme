@@ -32,7 +32,7 @@ while ( have_posts() ) :
 		<div class="kv-service__top">
 			<div class="kv-service__intro kv-content"><?php echo $kv_parts['']; // phpcs:ignore WordPress.Security.EscapeOutput -- the_content. ?></div>
 			<div class="kv-service__price">
-				<?php get_template_part( 'template-parts/price-card', null, array( 'page' => get_post(), 'heading' => 'h2', 'title' => 'Цена и что входит', 'first' => true ) ); ?>
+				<?php get_template_part( 'template-parts/price-card', null, array( 'page' => get_post(), 'heading' => 'h2', 'title' => 'Каркас и комплектация', 'first' => true ) ); ?>
 				<?php if ( $kv_facts ) : ?>
 					<dl class="kv-facts">
 						<?php foreach ( $kv_facts as $kv_label => $kv_value ) : ?>
@@ -51,10 +51,10 @@ while ( have_posts() ) :
 					<div class="kv-content">
 						<?php echo isset( $kv_parts[ $kv_anchor ] ) ? $kv_parts[ $kv_anchor ] : '<h2 id="' . esc_attr( $kv_anchor ) . '">' . esc_html( $kv_name ) . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- the_content. ?>
 						<p class="kv-other__price">
-							<?php if ( '' !== $kv_from ) : ?>
+							<?php if ( kv_public_prices_enabled() && '' !== $kv_from ) : ?>
 								от <strong><?php echo esc_html( $kv_from ); ?></strong> BYN
 							<?php else : ?>
-								Цена по запросу
+								Стоимость по запросу
 							<?php endif; ?>
 						</p>
 					</div>

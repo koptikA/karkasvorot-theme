@@ -60,11 +60,8 @@ def _schema_data(base):
         fails.append("Service в JSON-LD при пустой цене")
     for raw, want in (("1000 (проём 3×1,5 м)", 1000), ("800–1200", 800)):
         title, lds, _ = _render(base, price % _php_str(raw), SERVICE)
-        got = (((lds.get("Service") or {}).get("offers") or {}).get("priceSpecification") or {}).get("minPrice")
-        if got != want:
-            fails.append("цена %r: minPrice=%r, ожидалось %r" % (raw, got, want))
-        if not title or "цена от %d BYN |" % want not in title:
-            fails.append("цена %r: title %r, ожидалось «цена от %d BYN»" % (raw, title, want))
+        if "Service" in lds or (title and re.search(r"цена от|BYN", title)):
+            fails.append("внутренняя цена попала в SEO/JSON-LD: %r" % title)
     # Title swap without touching the DB: the_title filter + this request's post cache.
     swap = ("$kv_s = (int) (%s); $kv_new = 'Каркасы ворот в Минске & калитки';"
             " add_filter('the_title', function ($t, $id = 0) use ($kv_s, $kv_new) { return (int) $id === $kv_s ? $kv_new : $t; }, 10, 2);"

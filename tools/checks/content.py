@@ -5,14 +5,14 @@ import re
 from stand import PHP_ERR, fetch, run_php
 
 SERVICES = {  # slug -> strings the page must show (price, material from the spec table)
-    "/karkas-otkatnyh-vorot/": ["1000", "BYN", "60×40×2", "3×1,5"],
-    "/karkas-raspashnyh-vorot/": ["500", "BYN", "60×40×2"],
-    "/kalitki/": ["270", "BYN", "60×40×2"],
-    "/prochie-izdeliya/": ["300", "BYN", "20×20×2", "40×40×2", "цена по запросу",
+    "/karkas-otkatnyh-vorot/": ["60×40×2", "3×1,5"],
+    "/karkas-raspashnyh-vorot/": ["60×40×2"],
+    "/kalitki/": ["60×40×2"],
+    "/prochie-izdeliya/": ["20×20×2", "40×40×2", "Стоимость по запросу",
                            'id="mebel"', 'id="obuvnicy"', 'id="zabory"', 'id="navesy"'],
 }
 PAGES = ["/", "/nashi-raboty/", "/kontakty/", "/politika-konfidencialnosti/"] + list(SERVICES)
-DISCLAIMER = "цена может измениться"
+DISCLAIMER = "Стоимость рассчитывается индивидуально"
 INVENTED = re.compile(r"гаранти|опыт|стаж|\d+\s*(лет|год|дн|недел|объект|клиент)", re.I)
 
 COUNT = r"""
@@ -180,12 +180,12 @@ def check(base, s):
     if out["front"] != "posts":
         fails.append("установщик сделал главной неопубликованную glavnaya")
 
-    # Price edited in the page field shows up on the home card and on the service page.
+    # Owner requested no public amounts, even when legacy admin fields contain one.
     run_php(base, "update_post_meta( get_page_by_path( 'kalitki' )->ID, '_kv_price_from', '271' );")
     try:
         for path in ("/", "/kalitki/"):
-            if "271" not in _text(_main(fetch(base + path)[1])):
-                fails.append("%s: новая цена из поля «Цена от» не видна" % path)
+            if "271" in _text(_main(fetch(base + path)[1])):
+                fails.append("%s: внутренняя цена стала публичной" % path)
     finally:
         run_php(base, "update_post_meta( get_page_by_path( 'kalitki' )->ID, '_kv_price_from', '270' );")
     return fails
