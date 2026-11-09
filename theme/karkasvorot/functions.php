@@ -34,6 +34,16 @@ add_filter( 'image_editor_output_format', function ( $formats ) {
 
 add_filter( 'get_the_archive_title_prefix', '__return_empty_string' );
 
+// «Наши работы» has no pagination (archive-work.php lists all works): /nashi-raboty/page/N/ is a 404, not a duplicate.
+add_action( 'template_redirect', function () {
+	global $wp_query;
+	if ( is_post_type_archive( 'work' ) && (int) get_query_var( 'paged' ) > 1 ) {
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+	}
+}, 0 );
+
 add_action( 'wp_enqueue_scripts', function () {
 	$uri = get_template_directory_uri() . '/assets/';
 	wp_enqueue_style( 'kv-site', $uri . 'site.css', array(), KV_VERSION );
@@ -60,6 +70,14 @@ function kv_contact_link( string $type, string $class, string $label = '' ): str
 	list( $href, $text, $goal ) = $links[ $type ];
 	$external = 'telegram' === $type ? ' target="_blank" rel="noopener"' : '';
 	return '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $href, array( 'tel', 'viber', 'https' ) ) . '" data-goal="' . esc_attr( $goal ) . '"' . $external . '>' . esc_html( '' !== $label ? $label : $text ) . '</a>';
+}
+
+/**
+ * Image alt: the media library alt, else $fallback (the work / page name).
+ */
+function kv_image_alt( int $attachment_id, string $fallback ): string {
+	$alt = trim( (string) get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) );
+	return '' !== $alt ? $alt : wp_strip_all_tags( $fallback );
 }
 
 /**

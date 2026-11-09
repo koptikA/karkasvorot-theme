@@ -1,0 +1,13 @@
+{
+  "screens": 22,
+  "widths": [
+    390,
+    1440
+  ],
+  "horizontalOverflow": false,
+  "jsErrors": [],
+  "externalRequests": [],
+  "menuEscape": true,
+  "consentWithdrawal": true,
+  "successGoalOnce": true
+}

@@ -150,15 +150,21 @@ function kv_attachment_by_file( string $file ): int {
 
 /** @return array{created:array,skipped:array,drafted:array} */
 function kv_install(): array {
-	$report = array( 'created' => array(), 'skipped' => array(), 'drafted' => array() );
-	$ids    = array();
-	$menu   = 0;
+	$report    = array( 'created' => array(), 'skipped' => array(), 'drafted' => array() );
+	$attention = array();
+	$ids       = array();
+	$menu      = 0;
+	$failed    = false;
 	foreach ( kv_install_pages() as $slug => $p ) {
 		list( $title, $template, $content, $meta ) = $p;
 		$existing = get_page_by_path( $slug, OBJECT, 'page' );
 		if ( $existing ) {
 			$ids[ $slug ]        = $existing->ID;
 			$report['skipped'][] = 'page:' . $slug;
+			// Someone else's page under our slug: never overwrite it, tell the owner instead.
+			if ( $template && ( get_page_template_slug( $existing ) !== $template || ( isset( $meta['price'] ) && ! metadata_exists( 'post', $existing->ID, '_kv_price_from' ) ) || ( isset( $meta['prices'] ) && ! metadata_exists( 'post', $existing->ID, '_kv_prices' ) ) ) ) {
+				$attention[] = 'page:' . $slug . ' — страница уже была, без шаблона «Услуга» или полей цены; содержимое не менялось';
+			}
 			continue;
 		}
 		$id = wp_insert_post( wp_slash( array(
@@ -170,6 +176,8 @@ function kv_install(): array {
 			'menu_order'   => $menu++,
 		) ) );
 		if ( ! $id || is_wp_error( $id ) ) {
+			$failed      = true;
+			$attention[] = 'page:' . $slug . ' — не удалось создать; главная и меню не настраивались';
 			continue;
 		}
 		$ids[ $slug ]        = $id;
@@ -189,14 +197,17 @@ function kv_install(): array {
 		}
 	}
 
-	if ( in_array( 'page:glavnaya', $report['created'], true ) || 'page' !== get_option( 'show_on_front' ) ) {
+	$front = $failed || empty( $ids['glavnaya'] ) ? '' : get_post_status( $ids['glavnaya'] );
+	if ( 'publish' === $front && ( in_array( 'page:glavnaya', $report['created'], true ) || 'page' !== get_option( 'show_on_front' ) ) ) {
 		update_option( 'show_on_front', 'page' );
 		update_option( 'page_on_front', $ids['glavnaya'] );
 	}
 	update_option( 'wp_attachment_pages_enabled', '0' );
 
 	$locations = get_nav_menu_locations();
-	if ( empty( $locations['primary'] ) || ! wp_get_nav_menu_object( $locations['primary'] ) ) {
+	if ( $failed ) {
+		$report['skipped'][] = 'menu:primary';
+	} elseif ( empty( $locations['primary'] ) || ! wp_get_nav_menu_object( $locations['primary'] ) ) {
 		$menu_obj = wp_get_nav_menu_object( 'Главное меню' );
 		$menu_id  = $menu_obj ? $menu_obj->term_id : wp_create_nav_menu( 'Главное меню' );
 		if ( ! is_wp_error( $menu_id ) ) {
@@ -218,7 +229,6 @@ function kv_install(): array {
 	}
 
 	$order = 0;
-	$used  = array();
 	foreach ( kv_install_works() as $file => $target ) {
 		$order++;
 		$att = kv_attachment_by_file( $file );
@@ -233,10 +243,6 @@ function kv_install(): array {
 		}
 		$alt   = trim( (string) get_post_meta( $att, '_wp_attachment_image_alt', true ), " \"'«»" );
 		$title = '' !== $alt ? $alt : get_the_title( $att );
-		if ( in_array( $title, $used, true ) ) { // same alt on two photos: attachment title if it reads as text, else a number.
-			$title = preg_match( '/\p{Cyrillic}/u', get_the_title( $att ) ) && ! in_array( get_the_title( $att ), $used, true ) ? get_the_title( $att ) : $title . ' (' . $order . ')';
-		}
-		$used[] = $title;
 		$id    = wp_insert_post( wp_slash( array( 'post_type' => 'work', 'post_status' => 'publish', 'post_title' => $title, 'menu_order' => $order ) ) );
 		if ( ! $id || is_wp_error( $id ) ) {
 			continue;
@@ -263,7 +269,7 @@ function kv_install(): array {
 		$report['drafted'][] = 'page:sample-page';
 	}
 
-	update_option( 'kv_install_report', $report + array( 'time' => current_time( 'mysql' ) ), false );
+	update_option( 'kv_install_report', $report + array( 'attention' => $attention, 'time' => current_time( 'mysql' ) ), false );
 	update_option( 'kv_install_version', KV_VERSION, false );
 	return $report;
 }

@@ -1,5 +1,6 @@
 """Settings, content model and module stubs, through the stand (HTTP + run_php)."""
 import json
+import re
 
 from stand import fetch, run_php
 
@@ -58,10 +59,28 @@ if ( function_exists( 'kv_service_price' ) ) {
 	$out['works_by_service'] = wp_list_pluck( kv_works( $page ), 'ID' ) === array( $work );
 	$out['works_by_section'] = wp_list_pluck( kv_works( $page, 12, 'mebel' ), 'ID' ) === array( $work );
 	$out['works_other'] = kv_works( $page, 12, 'zabory' ) === array();
+	$_POST = wp_slash( array( 'kv_service_nonce' => 'bad', 'kv_price_from' => '999', 'kv_includes' => 'x', 'kv_faq' => '' ) );
+	wp_update_post( array( 'ID' => $page, 'post_title' => 'kv test service' ) );
+	$_POST = wp_slash( array( 'kv_work_nonce' => 'bad', 'kv_service' => '0', 'kv_section' => '', 'kv_city' => 'Брест' ) );
+	wp_update_post( array( 'ID' => $work, 'post_title' => 'kv test work' ) );
+	$_POST = array();
+	$out['bad_nonce'] = array( get_post_meta( $page, '_kv_price_from', true ), get_post_meta( $work, '_kv_city', true ) );
 	wp_delete_post( $work, true );
 	wp_delete_post( $page, true );
 }
+$k = get_page_by_path( 'kalitki' );
+$q = $GLOBALS['wp_query'];
+$q->query( array( 'page_id' => $k->ID ) );
+$GLOBALS['wp_the_query'] = $q;
+$GLOBALS['post'] = $q->post;
+$c = kv_breadcrumbs();
+$out['crumbs'] = array( count( $c ), $c ? $c[0]['url'] === home_url( '/' ) : false, $c ? end( $c )['url'] === get_permalink( $k ) : false );
 echo wp_json_encode( $out );
+"""
+TAGGED = r"""
+wp_set_current_user( 1 );
+$p = wp_insert_post( array( 'post_type' => 'post', 'post_status' => 'publish', 'post_title' => 'kv заголовок <em>kvem</em>', 'post_content' => 'x' ) );
+echo $p . ' ' . get_permalink( $p );
 """
 
 
@@ -94,6 +113,20 @@ def check(base, s):
             fails.append("content-model: %s не выполнено" % k)
     if out.get("city") != "Минск":
         fails.append("метабокс работы: _kv_city = %r" % out.get("city"))
+
+    if out.get("bad_nonce") != ["1000", "Минск"]:
+        fails.append("сохранение метабокса с неверным nonce изменило мета: %r" % out.get("bad_nonce"))
+    if out.get("crumbs") != [2, True, True]:
+        fails.append("kv_breadcrumbs() на странице «Калитки»: %r, ожидались главная → страница" % out.get("crumbs"))
+    pid, url = run_php(base, TAGGED).split()
+    try:
+        for where, u in (("запись", url), ("карточка в поиске", base + "/?s=kvem")):
+            m = re.search(r"<main[ >].*?</main>", fetch(u)[1], re.S)  # <head> meta rightly escape tags
+            body = m.group(0) if m else ""
+            if "<em>kvem</em>" not in body or "&lt;em&gt;" in body:
+                fails.append("%s: заголовок с тегами выведен буквально" % where)
+    finally:
+        run_php(base, "wp_delete_post(%d, true);" % int(pid))
 
     st, _, _ = fetch(base + "/?rest_route=/wp/v2/lead")
     if st != 404:

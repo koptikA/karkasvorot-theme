@@ -28,4 +28,4 @@
 .kv-cookie__text a { color: inherit; }
 .kv-cookie__actions { display: flex; gap: var(--kv-space-2); }
 .kv-cookie__btn--decline { background: transparent; color: var(--kv-on-dark); box-shadow: inset 0 0 0 1px var(--kv-on-dark); }
-@media (max-width: 47.99rem) { .kv-cookie { bottom: var(--kv-mobilebar-h); } }
+@media (max-width: 56rem) { .kv-cookie { bottom: var(--kv-mobilebar-h); } } /* same breakpoint as .kv-mobilebar in site.css */

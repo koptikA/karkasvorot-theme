@@ -36,7 +36,7 @@
 		window.ym(id, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true });
 	}
 	function goal(name) {
-		if (window.ym && id) window.ym(id, 'reachGoal', name);
+		if (choice === 'yes' && window.ym && id) window.ym(id, 'reachGoal', name);
 	}
 	var choice = null;
 	try { choice = localStorage.getItem('kv_consent'); } catch (e) {}
@@ -48,11 +48,17 @@
 			if (!btn) return;
 			var v = btn.getAttribute('data-consent');
 			try { localStorage.setItem('kv_consent', v); } catch (err) {}
+			choice = v;
 			banner.hidden = true;
 			if (v === 'yes') load();
+			else if (window.ym) { window.ym(id, 'destruct'); location.reload(); } // consent withdrawn: drop the loaded Metrika
 		});
 	}
 	document.addEventListener('click', function (e) {
+		if (banner && e.target.closest('[data-consent-open]')) {
+			banner.hidden = false;
+			banner.querySelector('[data-consent]').focus();
+		}
 		var a = e.target.closest('[data-goal]');
 		if (a) goal(a.getAttribute('data-goal'));
 	});

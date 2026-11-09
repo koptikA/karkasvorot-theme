@@ -3,37 +3,16 @@ OG copying the page, absolute og:image, sane JSON-LD; robots.txt, sitemap, noind
 and silence when Yoast/Rank Math is active. Missing pages are fine: only what the sitemap lists is checked."""
 import json
 import re
-import urllib.error
-import urllib.request
 from html import unescape
 
-from stand import fetch, run_php
+from stand import fetch, location, render_head, run_php
 
 BANNED = ("aggregateRating", "review", "FAQPage", "SearchAction", "sameAs")
 
 
-class _Stop(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, *a, **k):
-        return None
-
-
-def _location(url):
-    """-> (status, Location header) without following redirects."""
-    try:
-        with urllib.request.build_opener(_Stop).open(url, timeout=120) as r:
-            return r.status, None
-    except urllib.error.HTTPError as e:
-        return e.code, e.headers.get("Location")
-
-
 def _render(base, setup, page):
-    """Render <title> + wp_head of page id expression `page` after PHP `setup` (filters live only in this request)."""
-    code = (
-        "wp_set_current_user(0); %s $kv_id = (int) (%s); $q = $GLOBALS['wp_query']; $q->query(array('page_id' => $kv_id));"
-        " $GLOBALS['wp_the_query'] = $q; $GLOBALS['post'] = $q->post;"
-        " echo '<title>' . wp_get_document_title() . '</title>'; wp_head();"
-    ) % (setup, page)
-    html = run_php(base, code)
+    """-> (title, {@type: JSON-LD}, html) of page id expression `page` after PHP `setup` (filters live one request)."""
+    html = render_head(base, setup, page)
     lds = {}
     for block in _ld(html):
         try:
@@ -51,8 +30,7 @@ def _php_str(v):
 ORG_KEYS = {"telephone": "phone", "email": "email", "openingHours": "hours", "taxID": "unp", "legalName": "org_name"}
 ORG_VALUES = {"phone": "+375 29 111-22-33", "email": "a@b.by", "hours": "Mo-Fr 09:00-18:00", "unp": "123456789",
               "org_name": "ИП Тест <b>", "address": "г. Минск, ул. Тестовая, 1"}
-SERVICE = ("($s = kv_service_pages()) ? $s[0]->ID : wp_insert_post(array('post_type' => 'page', 'post_status' => 'publish',"
-           " 'post_title' => 'kv seo test service', 'page_template' => 'page-service.php'))")
+SERVICE = "0"  # id of a service page; set once per run in check()
 FRONT = "get_option('page_on_front')"
 
 
@@ -87,9 +65,10 @@ def _schema_data(base):
             fails.append("цена %r: minPrice=%r, ожидалось %r" % (raw, got, want))
         if not title or "цена от %d BYN |" % want not in title:
             fails.append("цена %r: title %r, ожидалось «цена от %d BYN»" % (raw, title, want))
-    swap = ("$kv_s = (int) (%s); $kv_t = get_post_field('post_title', $kv_s);"
-            " wp_update_post(array('ID' => $kv_s, 'post_title' => 'Каркасы ворот в Минске & калитки'));"
-            " register_shutdown_function(function () use ($kv_s, $kv_t) { wp_update_post(array('ID' => $kv_s, 'post_title' => $kv_t)); });") % SERVICE
+    # Title swap without touching the DB: the_title filter + this request's post cache.
+    swap = ("$kv_s = (int) (%s); $kv_new = 'Каркасы ворот в Минске & калитки';"
+            " add_filter('the_title', function ($t, $id = 0) use ($kv_s, $kv_new) { return (int) $id === $kv_s ? $kv_new : $t; }, 10, 2);"
+            " $kv_o = get_post($kv_s)->to_array(); $kv_o['post_title'] = $kv_new; wp_cache_set($kv_s, (object) $kv_o, 'posts');") % SERVICE
     title, lds, _ = _render(base, swap + price % "'500'", SERVICE)
     if not title or title.count("в Минске") != 1:
         fails.append("title удваивает «в Минске» или пуст: %r" % title)
@@ -179,12 +158,7 @@ def _sitemap_urls(base, fails):
 
 def _plugin_silence(base):
     """Render the front page head inside WP with and without a fake WPSEO_VERSION."""
-    code = (
-        "%s $q = $GLOBALS['wp_query']; $q->query(array('page_id' => (int) get_option('page_on_front')));"
-        " $GLOBALS['wp_the_query'] = $q; $GLOBALS['post'] = $q->post;"
-        " echo '<title>' . wp_get_document_title() . '</title>'; wp_head();"
-    )
-    own, quiet = run_php(base, code % ""), run_php(base, code % "define('WPSEO_VERSION', 'kv-test');")
+    own, quiet = render_head(base, "", FRONT), render_head(base, "define('WPSEO_VERSION', 'kv-test');", FRONT)
     fails = []
     for needle in ('name="description"', 'property="og:title"', "application/ld+json", "изготовление и монтаж | KARKASVOROT.BY</title>"):
         if needle not in own:
@@ -220,7 +194,7 @@ def check(base, s):
     for line in ("Disallow: /wp-admin/", "Allow: /wp-admin/admin-ajax.php", "Sitemap: %s/wp-sitemap.xml" % base):
         if line not in robots:
             fails.append("robots.txt без строки %r" % line)
-    st, loc = _location(base + "/?author=1")
+    st, loc = location(base + "/?author=1")
     if st != 301 or loc != base + "/":
         fails.append("?author=1: %s → %s, ожидался 301 на %s/" % (st, loc, base))
     st, html, _ = fetch(base + "/?s=x")
@@ -238,9 +212,17 @@ def check(base, s):
         " if (!$id) { $u = wp_upload_bits('kv-seo-test.jpg', null, file_get_contents(get_template_directory() . '/assets/og.jpg'));"
         " $id = wp_insert_attachment(array('post_mime_type' => 'image/jpeg', 'post_title' => 'kv seo test', 'post_status' => 'inherit'), $u['file']); }"
         " echo get_permalink($id) . ' ' . wp_get_attachment_url($id);")).split()
-    st, loc = _location(att[0]) if len(att) == 2 else (None, None)
+    st, loc = location(att[0]) if len(att) == 2 else (None, None)
     if len(att) != 2 or st != 301 or loc != att[1]:
         fails.append("вложение %s: %s → %s, ожидался 301 на файл" % (" ".join(att), st, loc))
     fails += _plugin_silence(base)
-    fails += _schema_data(base)
+    global SERVICE
+    made = run_php(base, "echo ($s = kv_service_pages()) ? 0 : wp_insert_post(array('post_type' => 'page', 'post_status' => 'publish',"
+                         " 'post_title' => 'kv seo test service', 'page_template' => 'page-service.php'));").strip()
+    SERVICE = made if made != "0" else "kv_service_pages()[0]->ID"
+    try:
+        fails += _schema_data(base)
+    finally:
+        if made != "0":
+            run_php(base, "wp_delete_post(%d, true);" % int(made))
     return fails

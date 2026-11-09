@@ -187,6 +187,7 @@ input, select, textarea, button { font: inherit; }
 .kv-contacts__list { list-style: none; padding: 0; }
 .kv-contacts .kv-footer__label { color: var(--kv-muted); }
 .kv-contacts .kv-footer__item--empty, .kv-placeholder { color: #7a4b00; background: #fff3d6; }
+.kv-footer__cookie { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
 .kv-single-work__photo img { display: block; width: 100%; border-radius: var(--kv-radius-lg); }
 @media (max-width: 56rem) {
 	.kv-service__top { grid-template-columns: 1fr; gap: var(--kv-space-4); }

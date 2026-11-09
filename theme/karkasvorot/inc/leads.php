@@ -198,8 +198,20 @@ add_action( 'manage_lead_posts_custom_column', function ( $col, $id ) {
 }, 10, 2 );
 
 add_action( 'wp_footer', function () {
-	get_template_part( 'template-parts/cookie-banner' );
+	if ( '' !== kv_opt( 'metrika_id' ) ) { // no Metrika → no cookies to ask about
+		get_template_part( 'template-parts/cookie-banner' );
+	}
 }, 5 );
+
+// ?zayavka=ok|err pages carry one visitor's result: never cache them (headers go out before any output).
+add_action( 'template_redirect', function () {
+	if ( isset( $_GET['zayavka'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		nocache_headers();
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
+	}
+} );
 
 add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'kv-form', get_template_directory_uri() . '/assets/form.css', array( 'kv-site' ), KV_VERSION );

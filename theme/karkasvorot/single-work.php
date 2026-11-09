@@ -16,8 +16,7 @@ while ( have_posts() ) :
 		<?php if ( $kv_img ) : ?>
 			<figure class="kv-single-work__photo">
 				<?php
-				$kv_alt = (string) get_post_meta( $kv_img, '_wp_attachment_image_alt', true );
-				echo wp_get_attachment_image( $kv_img, 'large', false, array( 'alt' => '' !== $kv_alt ? $kv_alt : $kv_name, 'loading' => false, 'fetchpriority' => 'high', 'sizes' => '(max-width: 48rem) 100vw, 48rem' ) );
+				echo wp_get_attachment_image( $kv_img, 'large', false, array( 'alt' => kv_image_alt( $kv_img, $kv_name ), 'loading' => false, 'fetchpriority' => 'high', 'sizes' => '(max-width: 48rem) 100vw, 48rem' ) );
 				?>
 			</figure>
 		<?php endif; ?>

@@ -53,3 +53,42 @@ python tools/stand.py php 'wp_set_current_user(1); print_r(kv_install());'
 ```
 
 Работает через `/kv-run.php` — файл копируется только в стенд (`tools/stand/run.php`), принимает POST только с 127.0.0.1, в тему и в zip не попадает. Пользователь по умолчанию — гость; нужен админ — `wp_set_current_user(1);`.
+
+
+## Таск 05: порт, безопасность и комплект передачи
+
+Порт задаётся один раз: `bash tools/serve.sh --port 9425` или `KV_PORT=9425 bash tools/serve.sh`.
+`tools/stand/.token` создаётся автоматически, исключён из Git и передаётся только заголовком `X-KV-Token`.
+Не выводите его в отчёты. `/kv-run.php` требует POST с loopback и верный токен. Скрипты проверки и установки ограничены localhost.
+Не запускайте `fetch_fixtures.py` в этой задаче: используются уже сохранённые файлы, доступ к боевому сайту запрещён.
+
+Полная проверка (PowerShell):
+
+```powershell
+$env:KV_LIGHTHOUSE='1'
+python -u tools/check_site.py http://127.0.0.1:9425
+```
+
+Без `KV_LIGHTHOUSE=1` функциональные проверки выполняются, но Lighthouse помечается `SKIP`, а не считается измеренным.
+Отчёты Lighthouse сохраняются в `docs/reports/`; снимки — в `docs/screens/`.
+Для снимков нужен установленный Playwright; путь к его модулю можно указать `KV_PLAYWRIGHT_MODULE`.
+Chrome можно задать через `CHROME_PATH`. Ничего не устанавливается глобально.
+
+```powershell
+node tools/capture.cjs http://127.0.0.1:9425
+python tools/build_zip.py
+```
+
+Проверка настоящей загрузки zip на отдельном чистом стенде, Git Bash:
+
+```bash
+export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL="*"
+npx -y @wp-playground/cli@latest server --port 9426 --php 7.4 --blueprint tools/stand/blueprint-clean.json
+```
+
+После `Ready!` в другом терминале: `python tools/build_zip.py --install http://127.0.0.1:9426`.
+Скрипт загружает zip через wp-admin, активирует тему и проверяет страницы. На этом стенде нет фикстур, поэтому фото работ закономерно отсутствуют.
+В архив включается только `theme/karkasvorot/`, без инструментов стенда, токенов и учётных данных.
+По окончании остановите только процессы своих локальных стендов; чужие порты не занимайте и не завершайте.
+
+Документы: `docs/zapusk.md` — владельцу; `docs/dizain-brif.md` — Astra6; `docs/proverka-05.md` — результаты приёмки.

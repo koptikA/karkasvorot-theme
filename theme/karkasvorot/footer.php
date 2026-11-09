@@ -30,6 +30,7 @@
 				?>
 			</ul>
 		</div>
+		<?php if ( current_user_can( 'manage_options' ) || '' !== kv_opt( 'org_name' ) . kv_opt( 'unp' ) . kv_opt( 'address' ) . kv_opt( 'registration' ) ) : ?>
 		<div class="kv-footer__col">
 			<h2 class="kv-footer__title">Реквизиты</h2>
 			<ul class="kv-footer__list">
@@ -41,10 +42,14 @@
 				?>
 			</ul>
 		</div>
+		<?php endif; ?>
 	</div>
 	<div class="kv-container kv-footer__bottom">
 		<span>© <?php echo esc_html( wp_date( 'Y' ) ); ?> KARKASVOROT.BY</span>
 		<a class="kv-footer__policy" href="<?php echo esc_url( home_url( '/politika-konfidencialnosti/' ) ); ?>">Политика обработки персональных данных</a>
+		<?php if ( '' !== kv_opt( 'metrika_id' ) ) : ?>
+			<button class="kv-footer__cookie" type="button" data-consent-open>Настройки cookie</button>
+		<?php endif; ?>
 	</div>
 </footer>
 <nav class="kv-mobilebar" aria-label="Быстрая связь">

@@ -25,7 +25,7 @@ A new classic WordPress theme `karkasvorot` for karkasvorot.by: a metal-works sh
 | 02 | Pages, texts, works import, installer | done, 01c197e |
 | 03 | Order form, lead storage, cookie consent, Metrika goals | done, 260d925 |
 | 04 | SEO: meta, JSON-LD, robots, sitemap, redirects | done, e6c3cf6 |
-| 05 | Launch guide, design brief for Astra6, zip, perf/a11y, ~25 deferred review fixes | **in progress, interrupted** |
+| 05 | Launch guide, design brief for Astra6, zip, perf/a11y, ~25 deferred review fixes | **done — see docs/proverka-05.md** |
 
 When this file was written, `python tools/check_site.py http://127.0.0.1:9400` was green on all 6 modules.
 
@@ -63,3 +63,7 @@ Final acceptance: compare the finished site against `.autopilot/2026-11-09-karka
 - launch steps.
 
 Design will be done later by Astra6. Its result then has to be ported into `assets/` with all checks still green.
+
+## Completed 2026-11-09 by Codex
+
+Ticket 05 is complete. Full local suite including Lighthouse: GREEN. Deliverables: `docs/zapusk.md`, `docs/dizain-brif.md`, `docs/screens/`, `docs/proverka-05.md`, `dist/karkasvorot.zip`. Zip uploaded and activated on a clean local Playground. Production was not accessed. Next step: Astra6 design, then rerun checks and rebuild the zip; owner fills missing business data and approves launch. Priority confirmed by owner: organic-search enquiries and orders, not appearance alone.

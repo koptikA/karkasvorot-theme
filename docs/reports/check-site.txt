@@ -1,0 +1,10 @@
+ok   base (0 failures)
+ok   content (0 failures)
+ok   fixtures (0 failures)
+ok   leads (0 failures)
+Lighthouse mobile http://127.0.0.1:9425/: performance 99, seo 100, accessibility 100
+Lighthouse mobile http://127.0.0.1:9425/karkas-otkatnyh-vorot/: performance 99, seo 100, accessibility 100
+ok   perf (0 failures)
+ok   seo (0 failures)
+ok   theme_model (0 failures)
+GREEN

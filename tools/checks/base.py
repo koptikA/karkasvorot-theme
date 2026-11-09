@@ -1,9 +1,10 @@
 """Base theme: header contacts, skip link, footer, lang, no PHP errors on base templates."""
 import re
 
-from stand import fetch
+from stand import PHP_ERR, fetch
 
-PHP_ERR = re.compile(r"(<b>)?(Warning|Notice|Deprecated|Fatal error|Parse error)(</b>)?:\s.*?\son line", re.I)
+SAMPLE_FATAL = ("<br />\n<b>Fatal error</b>:  Uncaught Error: Call to undefined function kv_x() in /wordpress/a.php:3\n"
+                "Stack trace:\n#0 {main}\n  thrown in <b>/wordpress/a.php</b> on line <b>3</b><br />")
 
 
 def _part(html, tag):
@@ -33,6 +34,8 @@ def check(base, s):
         fails.append("нет <footer>")
     if re.search(r"источник", footer, re.I):
         fails.append("в подвале шаблонное «источник: URL»")
+    if re.search(r">\s*Реквизиты\s*<", footer):
+        fails.append("посетителю виден заголовок «Реквизиты» при пустых реквизитах")
     if "Минская область" not in footer:
         fails.append("в подвале нет зоны работы «Минская область»")
     if not re.search(r'<html[^>]+lang="ru(-RU)?"', html):
@@ -40,7 +43,24 @@ def check(base, s):
     if not re.search(r"<body[^>]+data-metrika=", html):
         fails.append("<body> без data-metrika")
 
-    pages = {"/": 200, "/?s=%D0%BA%D0%B0%D1%80%D0%BA%D0%B0%D1%81": 200, "/nashi-raboty/": 200, "/net-takoj-stranicy-kv/": 404}
+    for hdr in ({}, {"X-KV-Token": "wrong"}):  # a cross-site form cannot send the stand token
+        st, _, _ = fetch(base + "/kv-run.php", data="echo 'KV_RUN_OPEN';", headers=hdr)
+        if st != 403:
+            fails.append("/kv-run.php без верного X-KV-Token: статус %s, ожидался 403" % st)
+
+    if not PHP_ERR.search(SAMPLE_FATAL):
+        fails.append("PHP_ERR не ловит многострочный fatal «Uncaught Error … on line»")
+    _, works, _ = fetch(base + "/nashi-raboty/")
+    one = re.search(r'kv-work__caption"><a href="%s(/nashi-raboty/[^"]+)"' % re.escape(base), works)
+    search = "/?s=%D0%BA%D0%B0%D1%80%D0%BA%D0%B0%D1%81"
+    pages = {"/": 200, search: 200, "/nashi-raboty/": 200, "/kalitki/": 200, "/net-takoj-stranicy-kv/": 404,
+             "/nashi-raboty/page/2/": 404}
+    if one:
+        pages[one.group(1)] = 200
+    else:
+        fails.append("в «Наших работах» нет ссылки на работу")
+    if 'class="kv-work' not in works:
+        fails.append("«Наши работы»: нет карточек работ")
     for path, want in pages.items():
         st, body, _ = fetch(base + path)
         if st != want:
@@ -50,4 +70,6 @@ def check(base, s):
             fails.append("%s: PHP-ошибка в HTML: %s" % (path, m.group(0)[:160]))
         if st == 200 and "<h1" not in body:
             fails.append("%s: нет <h1>" % path)
+        if path == search and "kv-card" not in body:
+            fails.append("поиск «каркас»: нет карточек kv-card")
     return fails

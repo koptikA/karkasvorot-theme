@@ -1,7 +1,9 @@
 """Leads: order form on every page, validation, PRG, dedup, honeypot, privacy of leads, cookie banner."""
 import http.cookiejar
+import json
 import re
 import time
+import urllib.error
 import urllib.request
 import uuid
 
@@ -59,6 +61,12 @@ def _post_fails(base):
         fails.append("введённые значения попали в URL")
     if not re.search(r'id="kv-f-phone"[^>]+aria-describedby="kv-f-phone-err"', html) or 'role="alert"' not in html:
         fails.append("ошибка телефона не связана aria-describedby / нет role=alert")
+    try:
+        cache = urllib.request.urlopen(url, timeout=120).headers.get("Cache-Control", "")
+    except urllib.error.HTTPError as e:
+        cache = e.headers.get("Cache-Control", "")
+    if "no-cache" not in cache and "no-store" not in cache:
+        fails.append("?zayavka=err отдаётся без запрета кэша (Cache-Control: %r)" % cache)
     st, html, _ = fetch(url)  # same ?zayavka=err link, another browser (no sender cookie)
     if "Иван Проверка" in html or "Проём 1 м" in html:
         fails.append("ссылка ?zayavka=err без cookie отправителя показывает введённые данные")
@@ -124,22 +132,28 @@ def check(base, s):
         if "kalitki" in url and not re.search(r'<option value="Калитка"\s+selected', html):
             fails.append("%s: изделие «Калитка» не выбрано заранее" % url)
 
-    banner = re.search(r'<div\b[^>]*class="kv-cookie\b.*?</div>\s*</div>', home, re.S)
-    if not banner:
-        fails.append("нет cookie-баннера .kv-cookie")
-    else:
-        for needle in ("Принять", "Отклонить", "/politika-konfidencialnosti/"):
-            if needle not in banner.group(0):
-                fails.append("в cookie-баннере нет «%s»" % needle)
-    old = run_php(base, 'echo get_theme_mod("kv_metrika_id", "");').strip()
+    old = json.loads(run_php(base, '$m = get_theme_mods(); echo wp_json_encode(array("exists" => is_array($m) && array_key_exists("kv_metrika_id", $m), "value" => get_theme_mod("kv_metrika_id", "")));'))
+    run_php(base, 'remove_theme_mod("kv_metrika_id");')
+    if 'class="kv-cookie' in fetch(base + "/")[1]:
+        fails.append("cookie-баннер выводится при пустом ID Метрики")
     run_php(base, 'set_theme_mod("kv_metrika_id", "12345678");')
     try:
         st, html, _ = fetch(base + "/")
+        banner = re.search(r'<div\b[^>]*class="kv-cookie\b.*?</div>\s*</div>', html, re.S)
+        if not banner:
+            fails.append("нет cookie-баннера .kv-cookie при заданном ID Метрики")
+        else:
+            for needle in ("Принять", "Отклонить", "/politika-konfidencialnosti/"):
+                if needle not in banner.group(0):
+                    fails.append("в cookie-баннере нет «%s»" % needle)
+        footer = re.search(r"<footer\b.*?</footer>", html, re.S)
+        if not footer or not re.search(r"<button[^>]+data-consent-open[^>]*>\s*Настройки cookie", footer.group(0)):
+            fails.append("в подвале нет кнопки «Настройки cookie» (data-consent-open)")
         if 'data-metrika="12345678"' not in html:
             fails.append("ID Метрики из настроек не попал в <body data-metrika>")
         if "mc.yandex.ru" in html:
             fails.append("в HTML есть mc.yandex.ru — Метрика должна грузиться только JS после согласия")
     finally:
-        run_php(base, 'set_theme_mod("kv_metrika_id", %s);' % ("'" + old.replace("\\", "").replace("'", "") + "'"))
+        run_php(base, ('set_theme_mod("kv_metrika_id", %s);' % ("'" + old["value"].replace("\\", "\\\\").replace("'", "\\'") + "'")) if old['exists'] else 'remove_theme_mod("kv_metrika_id");')
     fails += _post_fails(base)
     return fails

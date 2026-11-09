@@ -278,7 +278,7 @@ add_action( 'template_redirect', function () {
 		wp_safe_redirect( home_url( '/' ), 301 );
 		exit;
 	}
-	if ( is_attachment() ) {
+	if ( is_attachment() ) { // reserve: the installer sets wp_attachment_pages_enabled=0; this covers =1 set later
 		$file = wp_get_attachment_url( get_queried_object_id() );
 		wp_safe_redirect( $file ? $file : home_url( '/' ), 301 );
 		exit;

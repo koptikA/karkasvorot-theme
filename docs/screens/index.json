@@ -1,0 +1,134 @@
+[
+  {
+    "file": "home-390.png",
+    "url": "http://127.0.0.1:9425/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "otkatnye-390.png",
+    "url": "http://127.0.0.1:9425/karkas-otkatnyh-vorot/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "raspashnye-390.png",
+    "url": "http://127.0.0.1:9425/karkas-raspashnyh-vorot/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "kalitki-390.png",
+    "url": "http://127.0.0.1:9425/kalitki/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "prochie-390.png",
+    "url": "http://127.0.0.1:9425/prochie-izdeliya/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "raboty-390.png",
+    "url": "http://127.0.0.1:9425/nashi-raboty/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "kontakty-390.png",
+    "url": "http://127.0.0.1:9425/kontakty/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "politika-390.png",
+    "url": "http://127.0.0.1:9425/politika-konfidencialnosti/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "poisk-390.png",
+    "url": "http://127.0.0.1:9425/?s=каркас",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "404-390.png",
+    "url": "http://127.0.0.1:9425/net-takoj-stranicy-kv/",
+    "width": 390,
+    "status": 404
+  },
+  {
+    "file": "rabota-390.png",
+    "url": "http://127.0.0.1:9425/nashi-raboty/%d0%ba%d0%be%d0%b2%d0%b0%d0%bd%d1%8b%d0%b5-%d0%b2%d0%be%d1%80%d0%be%d1%82%d0%b0-%d1%81-%d0%ba%d0%b0%d0%bb%d0%b8%d1%82%d0%ba%d0%be%d0%b9-%d0%b8-%d0%ba%d0%b8%d1%80%d0%bf%d0%b8%d1%87%d0%bd%d1%8b%d0%bc/",
+    "width": 390,
+    "status": 200
+  },
+  {
+    "file": "home-1440.png",
+    "url": "http://127.0.0.1:9425/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "otkatnye-1440.png",
+    "url": "http://127.0.0.1:9425/karkas-otkatnyh-vorot/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "raspashnye-1440.png",
+    "url": "http://127.0.0.1:9425/karkas-raspashnyh-vorot/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "kalitki-1440.png",
+    "url": "http://127.0.0.1:9425/kalitki/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "prochie-1440.png",
+    "url": "http://127.0.0.1:9425/prochie-izdeliya/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "raboty-1440.png",
+    "url": "http://127.0.0.1:9425/nashi-raboty/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "kontakty-1440.png",
+    "url": "http://127.0.0.1:9425/kontakty/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "politika-1440.png",
+    "url": "http://127.0.0.1:9425/politika-konfidencialnosti/",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "poisk-1440.png",
+    "url": "http://127.0.0.1:9425/?s=каркас",
+    "width": 1440,
+    "status": 200
+  },
+  {
+    "file": "404-1440.png",
+    "url": "http://127.0.0.1:9425/net-takoj-stranicy-kv/",
+    "width": 1440,
+    "status": 404
+  },
+  {
+    "file": "rabota-1440.png",
+    "url": "http://127.0.0.1:9425/nashi-raboty/%d0%ba%d0%be%d0%b2%d0%b0%d0%bd%d1%8b%d0%b5-%d0%b2%d0%be%d1%80%d0%be%d1%82%d0%b0-%d1%81-%d0%ba%d0%b0%d0%bb%d0%b8%d1%82%d0%ba%d0%be%d0%b9-%d0%b8-%d0%ba%d0%b8%d1%80%d0%bf%d0%b8%d1%87%d0%bd%d1%8b%d0%bc/",
+    "width": 1440,
+    "status": 200
+  }
+]

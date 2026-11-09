@@ -6,6 +6,7 @@ s is a urllib OpenerDirector logged in as admin (or None if login failed). Exit 
 import importlib.util
 import pathlib
 import sys
+from urllib.parse import urlsplit
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -17,6 +18,8 @@ def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     base = sys.argv[1].rstrip("/")
+    if urlsplit(base).hostname not in ("127.0.0.1", "localhost", "::1"):
+        raise ValueError("Use a local Playground URL only")
     s = admin_session(base)
     total = 0
     for path in sorted((HERE / "checks").glob("*.py")):

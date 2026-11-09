@@ -10,3 +10,4 @@ __pycache__/
 .wordpress-playground/
 wordpress/
 *.log
+tools/stand/.token

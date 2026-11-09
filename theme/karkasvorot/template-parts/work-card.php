@@ -10,8 +10,7 @@ $kv_name = get_the_title( $kv_work );
 	<?php if ( $kv_img ) : ?>
 		<a class="kv-work__media" href="<?php echo esc_url( get_permalink( $kv_work ) ); ?>" tabindex="-1" aria-hidden="true">
 			<?php
-			$kv_alt = (string) get_post_meta( $kv_img, '_wp_attachment_image_alt', true );
-			echo wp_get_attachment_image( $kv_img, 'kv-card', false, array( 'class' => 'kv-work__img', 'alt' => '' !== $kv_alt ? $kv_alt : $kv_name, 'loading' => 'lazy' ) );
+			echo wp_get_attachment_image( $kv_img, 'kv-card', false, array( 'class' => 'kv-work__img', 'alt' => kv_image_alt( $kv_img, $kv_name ), 'loading' => 'lazy' ) );
 			?>
 		</a>
 	<?php endif; ?>
