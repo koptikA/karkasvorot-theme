@@ -152,7 +152,7 @@ a:hover { color: var(--kv-text); }
 .kv-calc__go { width: 100%; margin-top: 12px; text-align: center; }
 
 /* Products («Что варим»): paper blueprint cards */
-.kv-products { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.kv-products { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
 .kv-product, .kv-price { background-color: var(--kv-paper); background-image: linear-gradient(var(--kv-grid) 1px, transparent 1px), linear-gradient(90deg, var(--kv-grid) 1px, transparent 1px); background-size: 20px 20px; color: var(--kv-ink); }
 .kv-product { display: flex; flex-direction: column; gap: 14px; padding: 22px; text-decoration: none; }
 .kv-product:hover { color: var(--kv-ink); outline: 3px solid var(--kv-hot); outline-offset: -3px; }
@@ -373,3 +373,13 @@ input, select, textarea, button { font: inherit; }
 	.kv-hero__sparks { display: none; }
 	.kv-hero__bg { transform: none; }
 }
+/* Calculator canopy tab: plan view, no ground line. Brigades block on the home page. */
+.kv-calc--canopy .kv-calc__ground { display: none; }
+.kv-crew { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 24px 40px; align-items: center; }
+.kv-crew__list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.kv-crew__list li { padding-left: 22px; position: relative; line-height: 1.45; }
+.kv-crew__list li::before { content: ""; position: absolute; left: 0; top: .6em; width: 10px; height: 2px; background: var(--kv-hot); }
+.kv-crew__go { margin: 0; color: #b9bec4; line-height: 1.55; }
+.kv-crew__go span { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.kv-crew__go .kv-btn { flex: 1 1 11rem; text-align: center; }
+@media (max-width: 56rem) { .kv-crew { grid-template-columns: minmax(0, 1fr); } .kv-calc__tabs button { flex: 1 1 40%; } }

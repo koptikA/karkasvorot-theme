@@ -8,6 +8,7 @@ SERVICES = {  # slug -> strings the page must show (price, material from the spe
     "/karkas-otkatnyh-vorot/": ["60×40×2", "3×1,5"],
     "/karkas-raspashnyh-vorot/": ["60×40×2"],
     "/kalitki/": ["60×40×2"],
+    "/navesy-dlya-avto/": ["Минской области", "Стоимость по запросу"],
     "/prochie-izdeliya/": ["20×20×2", "40×40×2", "Стоимость по запросу",
                            'id="mebel"', 'id="obuvnicy"', 'id="zabory"', 'id="navesy"'],
 }
@@ -143,7 +144,7 @@ def check(base, s):
     for n in ("99-З", "Яндекс", "cookie", "отозвать"):
         if n not in pol:
             fails.append("политика: нет «%s»" % n)
-    for n in ("tel:+375447726823", "viber://", "t.me/", "wa.me/", "Беларус"):
+    for n in ("tel:+375447726823", "viber://", "t.me/", "wa.me/", "Минской области (в т.ч. Червенский район)", "доставка каркасов по всей Беларуси"):
         if n not in _main(html["/kontakty/"]):
             fails.append("контакты: нет %s" % n)
 

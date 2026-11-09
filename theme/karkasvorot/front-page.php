@@ -10,7 +10,7 @@ $kv_items = array( 'Откатные ворота', 'Распашные воро
 	<div class="kv-hero__in">
 		<p class="kv-tag kv-hero__kicker">Мастерская металлоконструкций · Минск</p>
 		<h1 class="kv-hero__title" id="kv-hero-title"><span>Варим</span><br>ворота<br><b>под проём</b></h1>
-		<p class="kv-lead">Каркасы откатных и распашных ворот, калитки, навесы и мебель. Изготовление в Минске, доставка и монтаж по всей Беларуси.</p>
+		<p class="kv-lead">Каркасы откатных и распашных ворот, калитки, навесы и мебель. Изготовление в Минске, монтаж в Минске и Минской области, доставка каркасов по всей Беларуси.</p>
 		<div class="kv-hero__cta"><a class="kv-btn" href="#raschet">Указать размер проёма</a><a class="kv-btn kv-btn--ghost" href="#raboty">Смотреть работы</a></div>
 	</div>
 	<div class="kv-hero__sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -24,7 +24,7 @@ $kv_items = array( 'Откатные ворота', 'Распашные воро
 		<div class="kv-head"><div><p class="kv-tag">Изделия</p><h2 class="kv-h2" id="kv-products-title">Что варим</h2></div><p class="kv-tag kv-tag--muted">Стоимость рассчитывается индивидуально — по размеру и комплектации</p></div>
 		<div class="kv-products">
 			<?php
-			$kv_labels = array( 'karkas-otkatnyh-vorot' => 'Откатные ворота', 'karkas-raspashnyh-vorot' => 'Распашные ворота', 'kalitki' => 'Калитки', 'prochie-izdeliya' => 'Мебель и другое' );
+			$kv_labels = array( 'karkas-otkatnyh-vorot' => 'Откатные ворота', 'karkas-raspashnyh-vorot' => 'Распашные ворота', 'kalitki' => 'Калитки', 'navesy-dlya-avto' => 'Навесы для авто', 'prochie-izdeliya' => 'Мебель и другое' );
 			foreach ( kv_service_pages() as $kv_n => $kv_page ) :
 				$kv_ill   = (int) get_post_meta( $kv_page->ID, '_kv_illustration', true );
 				$kv_label = isset( $kv_labels[ $kv_page->post_name ] ) ? $kv_labels[ $kv_page->post_name ] : get_the_title( $kv_page );
@@ -82,10 +82,22 @@ $kv_items = array( 'Откатные ворота', 'Распашные воро
 			<li><span class="kv-flow__n" aria-hidden="true">01</span><h3>Заявка</h3><p>Оставьте телефон и размеры, если знаете.</p></li>
 			<li><span class="kv-flow__n" aria-hidden="true">02</span><h3>Звонок мастера</h3><p>Согласуем вид, высоту и длину каркаса, посчитаем стоимость.</p></li>
 			<li><span class="kv-flow__n" aria-hidden="true">03</span><h3>Изготовление</h3><p>Варим каркас в мастерской в Минске, грунтуем.</p></li>
-			<li><span class="kv-flow__n" aria-hidden="true">04</span><h3>Доставка и монтаж</h3><p>По всей Беларуси — условия согласуем при заказе.</p></li>
+			<li><span class="kv-flow__n" aria-hidden="true">04</span><h3>Монтаж и доставка</h3><p>Монтируем в Минске и Минской области, каркасы доставляем по всей Беларуси.</p></li>
 		</ol>
 	</div>
 </section>
+<section class="kv-band kv-band--grid" aria-labelledby="kv-crew-title">
+	<div class="kv-wrap kv-crew">
+		<div><p class="kv-tag">Опт и объекты</p><h2 class="kv-h2" id="kv-crew-title">Бригадам и строителям</h2></div>
+		<ul class="kv-crew__list">
+			<li>Оптовые и повторные заказы</li>
+			<li>Работаем по безналичному расчёту</li>
+			<li>Рассчитаем каркасы под ваш объект</li>
+		</ul>
+		<p class="kv-crew__go">Позвоните или оставьте заявку — обсудим объём.<span><?php echo kv_contact_link( 'phone', 'kv-btn kv-btn--ghost' ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?><a class="kv-btn" href="#zayavka">Оставить заявку</a></span></p>
+	</div>
+</section>
+
 <?php
 kv_order_form();
 get_footer();

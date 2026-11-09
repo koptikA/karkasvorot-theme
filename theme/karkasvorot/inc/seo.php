@@ -91,7 +91,7 @@ function kv_seo_title(): string {
 /** Raw description: meta → excerpt → first ~155 chars of the text → a fallback with the title. */
 function kv_seo_description(): string {
 	if ( is_post_type_archive( 'work' ) ) {
-		return 'Фото реальных работ ' . KV_BRAND . ': каркасы откатных и распашных ворот, калитки, навесы, заборы и мебель. Минск и вся Беларусь.';
+		return 'Фото реальных работ ' . KV_BRAND . ': каркасы откатных и распашных ворот, калитки, навесы, заборы и мебель. Изготовление в Минске, доставка каркасов по всей Беларуси.';
 	}
 	$id   = is_singular() || is_front_page() ? get_queried_object_id() : 0;
 	$text = $id ? trim( (string) get_post_meta( $id, '_kv_seo_description', true ) ) : '';
@@ -106,9 +106,9 @@ function kv_seo_description(): string {
 		return $text;
 	}
 	if ( is_front_page() ) {
-		return 'Изготовление каркасов откатных и распашных ворот, калиток, мебели и навесов в Минске. Доставка и монтаж по всей Беларуси.';
+		return 'Изготовление каркасов откатных и распашных ворот, калиток, мебели и навесов в Минске. Монтаж в Минске и Минской области, доставка каркасов по всей Беларуси.';
 	}
-	return $id ? kv_seo_name( $id ) . '. ' . KV_BRAND . ' — каркасы ворот и калиток: Минск и вся Беларусь.' : '';
+	return $id ? kv_seo_name( $id ) . '. ' . KV_BRAND . ' — каркасы ворот и калиток: изготовление в Минске, доставка по всей Беларуси.' : '';
 }
 
 /** @return array{url:string,w:int,h:int} og:image. */
@@ -148,6 +148,7 @@ function kv_breadcrumbs(): array {
 function kv_seo_area(): array {
 	return array(
 		array( '@type' => 'City', 'name' => 'Минск' ),
+		array( '@type' => 'AdministrativeArea', 'name' => 'Минская область' ),
 		array( '@type' => 'Country', 'name' => 'Беларусь' ),
 	);
 }

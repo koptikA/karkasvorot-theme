@@ -22,6 +22,7 @@ $kv_base  = get_post_type_archive_link( 'work' );
 		<nav class="kv-filter" aria-label="Работы по услугам">
 			<a class="kv-filter__link" href="<?php echo esc_url( $kv_base ); ?>"<?php echo $kv_service ? '' : ' aria-current="page"'; ?>>Все</a>
 			<?php foreach ( $kv_services as $kv_page ) : ?>
+				<?php if ( $kv_service !== $kv_page->ID && ! kv_works( $kv_page->ID, 1 ) ) { continue; } // no works yet → no dead-end filter ?>
 				<a class="kv-filter__link" href="<?php echo esc_url( add_query_arg( 'usluga', $kv_page->post_name, $kv_base ) ); ?>"<?php echo $kv_service === $kv_page->ID ? ' aria-current="page"' : ''; ?>><?php echo esc_html( get_the_title( $kv_page ) ); ?></a>
 			<?php endforeach; ?>
 		</nav>

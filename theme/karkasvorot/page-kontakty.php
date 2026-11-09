@@ -24,7 +24,7 @@ while ( have_posts() ) :
 					kv_footer_field( 'email', 'E-mail' );
 					kv_footer_field( 'hours', 'Часы работы' );
 					?>
-					<li class="kv-footer__item"><span class="kv-footer__label">Зона работы:</span> изготовление в Минске, доставка и монтаж по всей Беларуси</li>
+					<li class="kv-footer__item"><span class="kv-footer__label">Зона работы:</span> изготовление в Минске · монтаж в Минске и Минской области (в т.ч. Червенский район) · доставка каркасов по всей Беларуси</li>
 				</ul>
 			</section>
 			<?php

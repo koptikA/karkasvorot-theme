@@ -49,13 +49,14 @@ def check(base, s):
     # Size calculator: its products must be real options of the order form it fills.
     form = re.search(r'<form\b[^>]*\bid="zayavka".*?</form>', html, re.S)
     calc = re.findall(r'data-product="([^"]+)"', html)
-    if 'id="raschet"' not in html or len(calc) != 3:
-        fails.append("главная: нет калькулятора #raschet с тремя типами")
+    if 'id="raschet"' not in html or len(calc) != 4:
+        fails.append("главная: нет калькулятора #raschet с четырьмя типами")
     for name in calc:
         if not form or '<option value="%s"' % name not in form.group(0):
             fails.append("калькулятор: «%s» нет среди изделий формы заявки" % name)
-    if "Беларус" not in footer:
-        fails.append("в подвале нет зоны работы «по всей Беларуси»")
+    for needle in ("Минская область", "Червенский район", "Доставка каркасов — вся Беларусь"):  # owner, 2026-11-09
+        if needle not in footer:
+            fails.append("в подвале нет географии владельца: «%s»" % needle)
     if not re.search(r'<html[^>]+lang="ru(-RU)?"', html):
         fails.append("<html lang> не ru/ru-RU")
     if not re.search(r"<body[^>]+data-metrika=", html):

@@ -25,17 +25,39 @@ function kv_blocks( string $html ): string {
 	return $out;
 }
 
+/** Owner's geography (2026-11-09): montage in Minsk and the region, frames delivered across Belarus. Old texts → new ones. */
+function kv_install_zone(): array {
+	return array(
+		'zone'      => 'Изготавливаем в Минске. Монтируем в Минске и Минской области, в том числе в Червенском районе. Каркасы доставляем по всей Беларуси.',
+		'mount'     => 'Да, монтируем в Минске и Минской области, в том числе в Червенском районе. В другие регионы Беларуси доставляем каркасы.',
+		'old_zone'  => 'Изготавливаем в Минске, доставляем и монтируем по всей Беларуси — условия выезда согласуем при заказе.',
+		'old_mount' => 'Да, мы занимаемся изготовлением и монтажом. Работаем в Минске и по всей Беларуси: доставку и выезд на монтаж в другой город согласуем при заказе.',
+	);
+}
+
+/** «Продаём только каркас» (owner, 2026-11-09). */
+function kv_install_frame_faq(): array {
+	return array( 'q' => 'Продаёте ли ролики, направляющую, автоматику?', 'a' => 'Нет, мы изготавливаем только каркас под ваш проём. Ролики, направляющую, автоматику и другую фурнитуру нужно купить отдельно.' );
+}
+
+/** «Прочие изделия» → «Навесы и беседки»: car canopies live on their own page. */
+function kv_install_navesy_link(): string {
+	return '<p>Беседки на металлическом каркасе изготавливаем и монтируем. Навесы для машин — на отдельной странице «<a href="' . esc_url( home_url( '/navesy-dlya-avto/' ) ) . '">Навесы для авто</a>».</p>';
+}
+
 /** Pages: slug => [title, template, content, meta]. Texts only from known facts (spec «Данные и контент»). */
 function kv_install_pages(): array {
-	$zone    = 'Изготавливаем в Минске, доставляем и монтируем по всей Беларуси — условия выезда согласуем при заказе.';
+	$zone    = kv_install_zone()['zone'];
 	$order   = array( 'q' => 'Как сделать заказ?', 'a' => 'Оставьте заявку на сайте или позвоните. Мастер перезвонит, согласует вид, высоту и длину каркаса, после этого каркас изготавливается, доставляется или монтируется.' );
-	$mount   = array( 'q' => 'Вы делаете монтаж?', 'a' => 'Да, мы занимаемся изготовлением и монтажом. Работаем в Минске и по всей Беларуси: доставку и выезд на монтаж в другой город согласуем при заказе.' );
-	$service = function ( $what, $price, $price_note ) use ( $zone, $order, $mount ) {
+	$mount   = array( 'q' => 'Вы делаете монтаж?', 'a' => kv_install_zone()['mount'] );
+	$frame   = kv_install_frame_faq();
+	$service = function ( $what, $price, $price_note ) use ( $zone, $order, $mount, $frame ) {
 		return array(
 			'<p>Изготавливаем и монтируем ' . $what . '. Каркас сваривается из профильной трубы 60×40×2 мм и покрывается грунтовкой. ' . $zone . '</p>',
 			array(
 				array( 'q' => 'Сколько стоит ' . $price_note . '?', 'a' => 'От ' . $price . ' BYN. Точную цену мастер назовёт после согласования вида, высоты и длины каркаса.' ),
 				array( 'q' => 'Из чего делается каркас?', 'a' => 'Из профильной трубы 60×40×2 мм. Готовый каркас покрывается грунтовкой.' ),
+				$frame,
 				$mount,
 				$order,
 			),
@@ -51,6 +73,27 @@ function kv_install_pages(): array {
 		'karkas-otkatnyh-vorot'      => array( 'Каркас откатных ворот', 'page-service.php', $otk, array( 'price' => '1000', 'includes' => "каркас под проём 3×1,5 м\n" . $tube, 'file' => 'vorota.png', 'faq' => $otk_faq ) ),
 		'karkas-raspashnyh-vorot'    => array( 'Каркас распашных ворот', 'page-service.php', $ras, array( 'price' => '500', 'includes' => $tube, 'file' => 'raspashnye-vorota.png', 'faq' => $ras_faq ) ),
 		'kalitki'                    => array( 'Калитки', 'page-service.php', $kal, array( 'price' => '270', 'includes' => $tube, 'file' => 'kalitka.png', 'faq' => $kal_faq ) ),
+		'navesy-dlya-avto'           => array(
+			'Навесы для авто',
+			'page-service.php',
+			'<p>Изготавливаем навесы для машин на металлическом каркасе. Каркас варим в своей мастерской в Минске.</p>
+<p>Монтируем навесы в Минске и Минской области, в том числе в Червенском районе. Каркасы доставляем по всей Беларуси.</p>
+<p>Стоимость — по запросу: пришлите ширину и длину площадки под навес, мастер перезвонит, уточнит детали и посчитает.</p>',
+			array(
+				'order'    => 3, // right after «Калитки», also when the other pages already exist
+				'price'    => '',
+				'includes' => "металлический каркас навеса
+изготовление в Минске
+монтаж в Минске и Минской области",
+				'file'     => 'naves-dlya-mashin-karkas-vorot-by.jpg',
+				'faq'      => array(
+					array( 'q' => 'Сколько стоит навес для авто?', 'a' => 'Стоимость по запросу: она зависит от размеров и конструкции навеса. Оставьте заявку или позвоните — мастер уточнит детали и посчитает.' ),
+					array( 'q' => 'Что нужно для расчёта?', 'a' => 'Ширина и длина площадки под навес и населённый пункт. Размеры можно указать в калькуляторе на этой странице — они попадут в заявку.' ),
+					array( 'q' => 'Где вы монтируете навесы?', 'a' => kv_install_zone()['mount'] ),
+					$order,
+				),
+			),
+		),
 		'prochie-izdeliya'           => array(
 			'Прочие изделия',
 			'page-service.php',
@@ -62,7 +105,7 @@ function kv_install_pages(): array {
 <h2 id="zabory">Заборы</h2>
 <p>Заборы из профнастила и металлоштакета: изготовление и монтаж.</p>
 <h2 id="navesy">Навесы и беседки</h2>
-<p>Навесы и беседки на металлическом каркасе: изготовление и монтаж.</p>',
+' . kv_install_navesy_link(),
 			array(
 				'price'    => '300',
 				'includes' => "каркасы мебели — труба 20×20×2 мм\nобувницы — труба 40×40×2 мм\nгрунтовка",
@@ -122,15 +165,15 @@ function kv_install_works(): array {
 		'frame-125.jpg'                             => array( 'karkas-raspashnyh-vorot', '' ),
 		'raspashnye-vorota-s-kalitkoj.png'          => array( 'prochie-izdeliya', 'zabory' ),
 		'zabor-iz-profnastila-bordo-cena.jpg'       => array( 'prochie-izdeliya', 'zabory' ),
-		'naves-dlya-mashin-karkas-vorot-by.jpg'     => array( 'prochie-izdeliya', 'navesy' ),
+		'naves-dlya-mashin-karkas-vorot-by.jpg'     => array( 'navesy-dlya-avto', '' ),
 		'sadovaya-bosedka-barbekyu-karkas.jpg'      => array( 'prochie-izdeliya', 'navesy' ),
 		'slider10.jpg'                              => array( 'prochie-izdeliya', 'obuvnicy' ),
 		'slider9.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
 		'slider8.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
 		'slider7.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
-		'slider1.jpg'                               => array( '', '' ),
+		'slider1.jpg'                               => array( 'karkas-raspashnyh-vorot', '' ),
 		'slider2.jpg'                               => array( '', '' ),
-		'slider4.png'                               => array( '', '' ),
+		'slider4.png'                               => array( 'karkas-raspashnyh-vorot', '' ),
 	);
 }
 
@@ -148,6 +191,133 @@ function kv_attachment_by_file( string $file ): int {
 	) );
 }
 
+/** Owner's improved photos (assets/works/, product unchanged): file => [legacy source of the work, alt]. '' = a new work. */
+function kv_install_photos(): array {
+	return array(
+		'naves-dlya-avto.jpg'              => array( 'naves-dlya-mashin-karkas-vorot-by.jpg', 'Навес для машины на металлическом каркасе с арочной крышей у частного дома' ),
+		'zabor-shtaketnik-temnyy.jpg'      => array( 'frame-125.jpg', 'Тёмный забор из металлоштакетника перед частным домом' ),
+		'stolik-loft-v-interere.jpg'       => array( 'slider8.jpg', 'Металлический столик в стиле лофт между мягкими банкетками в прихожей' ),
+		'karkas-stola-geometricheskiy.jpg' => array( 'slider9.jpg', 'Сварной каркас стола с геометрическими вставками на полу мастерской' ),
+		'vorota-shtaketnik-svetlye.jpg'    => array( 'slider1.jpg', 'Ворота из светлого металлоштакетника на участке' ),
+		'vorota-chernye-prutok-u-doma.jpg' => array( 'slider4.png', 'Чёрные металлические ворота из вертикальных прутьев у кирпичного дома' ),
+		'zelenyy-zabor-s-kalitkoy.jpg'     => array( 'raspashnye-vorota-s-kalitkoj.png', 'Зелёный забор из профнастила с калиткой' ),
+		'mangal-na-podstavke.jpg'          => array( '', 'Металлический мангал на подставке с боковыми полками во дворе' ),
+	);
+}
+
+/** Media library ID of a theme photo: found by our meta or file name, else copied in (new file, sub-sizes). 0 on failure. */
+function kv_install_photo( string $file, string $alt ): int {
+	$found = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'any', 'meta_key' => '_kv_photo', 'meta_value' => $file, 'fields' => 'ids', 'numberposts' => 1 ) ); // phpcs:ignore WordPress.DB.SlowDBQuery
+	$id    = $found ? (int) $found[0] : kv_attachment_by_file( $file );
+	if ( $id ) {
+		return $id;
+	}
+	$path = KV_DIR . '/assets/works/' . $file;
+	$up   = is_readable( $path ) ? wp_upload_bits( $file, null, (string) file_get_contents( $path ) ) : array( 'error' => 'no file' );
+	if ( ! empty( $up['error'] ) ) {
+		return 0;
+	}
+	$id = wp_insert_attachment( array( 'post_title' => $alt, 'post_mime_type' => 'image/jpeg', 'post_status' => 'inherit' ), $up['file'] );
+	if ( ! $id || is_wp_error( $id ) ) {
+		return 0;
+	}
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $up['file'] ) );
+	update_post_meta( $id, '_wp_attachment_image_alt', $alt );
+	update_post_meta( $id, '_kv_photo', $file );
+	return (int) $id;
+}
+
+/** Work ID with _kv_source = $source; 0 if none. */
+function kv_install_work_of( int $source ): int {
+	$w = $source ? get_posts( array( 'post_type' => 'work', 'post_status' => 'any', 'meta_key' => '_kv_source', 'meta_value' => (string) $source, 'fields' => 'ids', 'numberposts' => 1 ) ) : array(); // phpcs:ignore WordPress.DB.SlowDBQuery
+	return $w ? (int) $w[0] : 0;
+}
+
+/** New photos become work thumbnails (only while the work still shows its legacy image); old attachments stay. */
+function kv_install_owner_photos( array $ids, array &$report ) {
+	foreach ( kv_install_photos() as $file => $p ) {
+		list( $old, $alt ) = $p;
+		$source = '' !== $old ? kv_attachment_by_file( $old ) : 0;
+		$work   = kv_install_work_of( $source );
+		if ( '' !== $old && ! $work ) {
+			$report['skipped'][] = 'photo:' . $file . ' (нет работы ' . $old . ')';
+			continue;
+		}
+		if ( $work && ! in_array( (int) get_post_thumbnail_id( $work ), array( 0, $source ), true ) ) {
+			continue; // already the new photo, or the owner chose another one
+		}
+		$att = kv_install_photo( $file, $alt );
+		if ( ! $att ) {
+			$report['skipped'][] = 'photo:' . $file . ' (не загрузилось)';
+			continue;
+		}
+		if ( $work ) {
+			set_post_thumbnail( $work, $att );
+			$report['created'][] = 'photo:' . $file;
+		} elseif ( ! kv_install_work_of( $att ) && ! empty( $ids['prochie-izdeliya'] ) ) {
+			$id = wp_insert_post( wp_slash( array( 'post_type' => 'work', 'post_status' => 'publish', 'post_title' => 'Мангал на подставке', 'post_name' => 'mangal-na-podstavke', 'menu_order' => 100 ) ) );
+			if ( $id && ! is_wp_error( $id ) ) {
+				set_post_thumbnail( $id, $att );
+				update_post_meta( $id, '_kv_source', (string) $att );
+				update_post_meta( $id, '_kv_service', (string) $ids['prochie-izdeliya'] );
+				$report['created'][] = 'work:' . $file;
+			}
+		}
+	}
+}
+
+/** Sites installed before 2026-11-09: works to their new pages, owner's geography, frame-only FAQ. Exact old texts only. */
+function kv_install_migrate( array $ids ) {
+	$bind = function ( int $work, string $slug ) use ( $ids ) {
+		if ( $work && ! empty( $ids[ $slug ] ) ) {
+			update_post_meta( $work, '_kv_service', (string) $ids[ $slug ] );
+			delete_post_meta( $work, '_kv_section' );
+		}
+	};
+	foreach ( array( 'slider1.jpg', 'slider4.png' ) as $file ) {
+		$w = kv_install_work_of( kv_attachment_by_file( $file ) );
+		if ( $w && ! get_post_meta( $w, '_kv_service', true ) ) {
+			$bind( $w, 'karkas-raspashnyh-vorot' );
+		}
+	}
+	$w = kv_install_work_of( kv_attachment_by_file( 'naves-dlya-mashin-karkas-vorot-by.jpg' ) );
+	if ( $w && 'navesy' === get_post_meta( $w, '_kv_section', true ) ) {
+		$bind( $w, 'navesy-dlya-avto' );
+	}
+
+	$zone = kv_install_zone();
+	$from = array( $zone['old_zone'], '<p>Навесы и беседки на металлическом каркасе: изготовление и монтаж.</p>' );
+	$to   = array( $zone['zone'], kv_install_navesy_link() );
+	foreach ( array( 'glavnaya', 'karkas-otkatnyh-vorot', 'karkas-raspashnyh-vorot', 'kalitki', 'prochie-izdeliya', 'kontakty' ) as $slug ) {
+		if ( empty( $ids[ $slug ] ) ) {
+			continue;
+		}
+		$content = (string) get_post_field( 'post_content', $ids[ $slug ], 'raw' );
+		$new     = str_replace( $from, $to, $content );
+		if ( $new !== $content ) {
+			wp_update_post( wp_slash( array( 'ID' => $ids[ $slug ], 'post_content' => $new ) ) );
+		}
+		$faq = (string) get_post_meta( $ids[ $slug ], '_kv_faq', true );
+		if ( false !== strpos( $faq, $zone['old_mount'] ) ) {
+			kv_set_meta( $ids[ $slug ], '_kv_faq', str_replace( $zone['old_mount'], $zone['mount'], $faq ) );
+		}
+	}
+
+	if ( get_option( 'kv_migrated_1109' ) ) {
+		return; // the frame-only answer is added once; if the owner removes it, it stays removed
+	}
+	$frame = kv_install_frame_faq();
+	foreach ( array( 'karkas-otkatnyh-vorot', 'karkas-raspashnyh-vorot', 'kalitki' ) as $slug ) {
+		$items = empty( $ids[ $slug ] ) ? null : json_decode( (string) get_post_meta( $ids[ $slug ], '_kv_faq', true ), true );
+		if ( is_array( $items ) && ! in_array( $frame['q'], wp_list_pluck( $items, 'q' ), true ) ) {
+			array_splice( $items, min( 2, count( $items ) ), 0, array( $frame ) );
+			kv_set_meta( $ids[ $slug ], '_kv_faq', wp_json_encode( $items, JSON_UNESCAPED_UNICODE ) );
+		}
+	}
+	update_option( 'kv_migrated_1109', KV_VERSION, false );
+}
+
 /** @return array{created:array,skipped:array,drafted:array} */
 function kv_install(): array {
 	$report    = array( 'created' => array(), 'skipped' => array(), 'drafted' => array() );
@@ -162,7 +332,7 @@ function kv_install(): array {
 			$ids[ $slug ]        = $existing->ID;
 			$report['skipped'][] = 'page:' . $slug;
 			// Someone else's page under our slug: never overwrite it, tell the owner instead.
-			if ( $template && ( get_page_template_slug( $existing ) !== $template || ( isset( $meta['price'] ) && ! metadata_exists( 'post', $existing->ID, '_kv_price_from' ) ) || ( isset( $meta['prices'] ) && ! metadata_exists( 'post', $existing->ID, '_kv_prices' ) ) ) ) {
+			if ( $template && ( get_page_template_slug( $existing ) !== $template || ( ! empty( $meta['price'] ) && ! metadata_exists( 'post', $existing->ID, '_kv_price_from' ) ) || ( isset( $meta['prices'] ) && ! metadata_exists( 'post', $existing->ID, '_kv_prices' ) ) ) ) {
 				$attention[] = 'page:' . $slug . ' — страница уже была, без шаблона «Услуга» или полей цены; содержимое не менялось';
 			}
 			continue;
@@ -173,8 +343,9 @@ function kv_install(): array {
 			'post_title'   => $title,
 			'post_name'    => $slug,
 			'post_content' => kv_blocks( $content ),
-			'menu_order'   => $menu++,
+			'menu_order'   => isset( $meta['order'] ) ? $meta['order'] : $menu,
 		) ) );
+		$menu++;
 		if ( ! $id || is_wp_error( $id ) ) {
 			$failed      = true;
 			$attention[] = 'page:' . $slug . ' — не удалось создать; главная и меню не настраивались';
@@ -256,6 +427,11 @@ function kv_install(): array {
 			kv_set_meta( $id, '_kv_section', $target[1] );
 		}
 		$report['created'][] = 'work:' . $file;
+	}
+
+	if ( ! $failed ) {
+		kv_install_owner_photos( $ids, $report );
+		kv_install_migrate( $ids );
 	}
 
 	$old = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => -1 ) );

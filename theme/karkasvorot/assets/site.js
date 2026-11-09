@@ -99,8 +99,15 @@
    kvCalcGeom() also produced the static no-JS drawing in template-parts/calc.php. */
 function kvCalcGeom(type, A, B) {
 	var r = function (v) { return Math.round(v * 10) / 10; };
-	var s = Math.min(type === 'wicket' ? 150 : 120, 600 / (type === 'slide' ? A * 1.45 : A));
-	var x = 70, W = r(A * s), y = r(250 - B * s * 0.85), H = r(250 - y), m = r(y + H / 2), e = r(x + W), fr, br;
+	var s = type === 'canopy' ? Math.min(560 / A, 225 / B) : Math.min(type === 'wicket' ? 150 : 120, 600 / (type === 'slide' ? A * 1.45 : A));
+	var x = 70, W = r(A * s), y = r(250 - B * s * (type === 'canopy' ? 1 : 0.85)), H = r(250 - y), m = r(y + H / 2), e = r(x + W), fr, br, i, k;
+	if (type === 'canopy') { // plan view: A across, B along; purlins every metre, posts every ~3 m on both sides
+		fr = 'M' + x + ' ' + y + 'H' + e + 'V250H' + x + 'Z';
+		br = '';
+		for (i = 1; i < Math.round(B); i++) br += 'M' + x + ' ' + r(y + H * i / Math.round(B)) + 'H' + e;
+		for (k = Math.ceil(B / 3), i = 0; i <= k; i++) br += 'M' + (x - 6) + ' ' + r(y - 6 + H * i / k) + 'h12v12h-12ZM' + r(e - 6) + ' ' + r(y - 6 + H * i / k) + 'h12v12h-12Z';
+		y = r(y); return { fr: fr, br: br, py: y, ph: 0, p2: e, dA: 'M70 262V280M' + e + ' 262V280M70 271H' + e, tA: r(x + W / 2), dB: 'M36 ' + y + 'H46M36 250H46M41 ' + y + 'V250', tB: m };
+	}
 	if (type === 'slide') {
 		fr = 'M' + x + ' ' + y + 'H' + e + 'V250H' + x + 'ZM' + e + ' ' + y + 'L' + r(x + W * 1.45) + ' ' + r(y + H * 0.4) + 'V250H' + e;
 		br = 'M' + x + ' 250L' + r(x + W / 2) + ' ' + y + 'L' + e + ' 250M' + r(x + W / 2) + ' ' + y + 'V250';
@@ -122,7 +129,9 @@ function kvCalcGeom(type, A, B) {
 	var f = function (v) { return (+v).toFixed(1).replace('.', ','); };
 	function set(sel, attrs) { for (var k in attrs) q(sel).setAttribute(k, attrs[k]); }
 	function draw() {
-		var wk = tab.getAttribute('data-type') === 'wicket', g = kvCalcGeom(tab.getAttribute('data-type'), +w.value, +h.value);
+		var type = tab.getAttribute('data-type'), wk = type === 'wicket', cn = type === 'canopy', g = kvCalcGeom(type, +w.value, +h.value);
+		q('.kv-calc__svg').classList.toggle('kv-calc--canopy', cn);
+		[].forEach.call(root.querySelectorAll('[data-canopy]'), function (el) { el.textContent = el.getAttribute(cn ? 'data-canopy' : 'data-gate'); });
 		set('.kv-calc__fr', { d: g.fr }); set('.kv-calc__br', { d: g.br });
 		set('.kv-calc__p1', { y: g.py, height: g.ph }); set('.kv-calc__p2', { x: g.p2, y: g.py, height: g.ph });
 		set('.kv-calc__dA', { d: g.dA }); set('.kv-calc__tA', { x: g.tA }); set('.kv-calc__dB', { d: g.dB });
@@ -134,23 +143,26 @@ function kvCalcGeom(type, A, B) {
 			q('output[for="' + el.id + '"]').textContent = f(el.value) + ' м';
 		});
 		q('.kv-calc__w').textContent = f(w.value);
-		q('.kv-calc__what').textContent = wk ? 'Калитка' : 'Ворота';
-		go.textContent = (wk ? 'Рассчитать калитку ' : 'Рассчитать ворота ') + f(w.value) + ' × ' + f(h.value) + ' м';
+		q('.kv-calc__what').textContent = cn ? 'Навес' : wk ? 'Калитка' : 'Ворота';
+		go.textContent = (cn ? 'Рассчитать навес ' : wk ? 'Рассчитать калитку ' : 'Рассчитать ворота ') + f(w.value) + ' × ' + f(h.value) + ' м';
 	}
 	w.addEventListener('input', draw);
 	h.addEventListener('input', draw);
 	[].forEach.call(tabs, function (b) {
 		b.addEventListener('click', function () {
+			var kind = (b.getAttribute('data-type') === 'canopy') !== (tab.getAttribute('data-type') === 'canopy');
 			tab = b;
 			[].forEach.call(tabs, function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-			w.max = b.getAttribute('data-max');
-			if (+w.value > +w.max) w.value = 1;
+			var lim = b.getAttribute('data-limits').split(' '); // wmin wmax wdef hmin hmax hdef
+			w.min = lim[0]; w.max = lim[1]; h.min = lim[3]; h.max = lim[4];
+			if (kind) { w.value = lim[2]; h.value = lim[5]; }
 			draw();
 		});
 	});
 	go.addEventListener('click', function () {
 		var product = document.getElementById('kv-f-product'), comment = document.getElementById('kv-f-comment');
-		var name = tab.getAttribute('data-product'), line = name + ': ширина проёма ' + f(w.value) + ' м, высота ' + f(h.value) + ' м. Город: ';
+		var name = tab.getAttribute('data-product'), cn = tab.getAttribute('data-type') === 'canopy';
+		var line = name + (cn ? ': ширина ' + f(w.value) + ' м, длина ' : ': ширина проёма ' + f(w.value) + ' м, высота ') + f(h.value) + ' м. Город: ';
 		if (product) product.value = name;
 		if (comment) { // replace our previous line, keep what the visitor typed
 			var v = comment.value, rest = last && v.indexOf(last) === 0 ? v.slice(last.length) : (v ? '\n' + v : '');

@@ -45,7 +45,7 @@ while ( have_posts() ) :
 		</div>
 
 		<?php
-		$kv_calc = array( 'karkas-otkatnyh-vorot' => 'slide', 'karkas-raspashnyh-vorot' => 'swing', 'kalitki' => 'wicket' );
+		$kv_calc = array( 'karkas-otkatnyh-vorot' => 'slide', 'karkas-raspashnyh-vorot' => 'swing', 'kalitki' => 'wicket', 'navesy-dlya-avto' => 'canopy' );
 		if ( isset( $kv_calc[ get_post_field( 'post_name' ) ] ) ) {
 			get_template_part( 'template-parts/calc', null, array( 'type' => $kv_calc[ get_post_field( 'post_name' ) ] ) );
 		}
@@ -67,6 +67,13 @@ while ( have_posts() ) :
 					<?php get_template_part( 'template-parts/works', null, array( 'works' => kv_works( $kv_id, 12, $kv_anchor ), 'title' => 'Работы — ' . $kv_name, 'heading' => 'h3' ) ); ?>
 				</section>
 			<?php endforeach; ?>
+			<?php
+			// Works of this page outside the sections above (e.g. «Мангал на подставке»).
+			$kv_rest = array_filter( kv_works( $kv_id, -1 ), function ( $kv_w ) {
+				return ! array_key_exists( (string) get_post_meta( $kv_w->ID, '_kv_section', true ), kv_other_sections() );
+			} );
+			get_template_part( 'template-parts/works', null, array( 'works' => array_values( $kv_rest ), 'title' => 'Другие работы' ) );
+			?>
 		<?php else : ?>
 			<?php get_template_part( 'template-parts/works', null, array( 'works' => kv_works( $kv_id ), 'title' => 'Наши работы — ' . $kv_title ) ); ?>
 		<?php endif; ?>

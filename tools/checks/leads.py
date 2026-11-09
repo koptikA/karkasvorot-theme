@@ -30,7 +30,7 @@ def _form_fails(where, html):
     for fid in re.findall(r'<(?:input|select|textarea)[^>]+id="([\w-]+)"', form):
         if 'for="%s"' % fid not in form:
             fails.append("%s: у поля #%s нет <label>" % (where, fid))
-    for opt in ("Каркас откатных ворот", "Каркас распашных ворот", "Калитка", "Каркас мебели", "Обувница", "Забор", "Навес или беседка", "Другое"):
+    for opt in ("Каркас откатных ворот", "Каркас распашных ворот", "Калитка", "Навес для авто", "Каркас мебели", "Обувница", "Забор", "Навес или беседка", "Другое"):
         if ">%s</option>" % opt not in form:
             fails.append("%s: в списке изделий нет «%s»" % (where, opt))
     return fails

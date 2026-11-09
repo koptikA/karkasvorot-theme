@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
 
 /** Product options of the form: value = label. */
 function kv_lead_products(): array {
-	return array( 'Каркас откатных ворот', 'Каркас распашных ворот', 'Калитка', 'Каркас мебели', 'Обувница', 'Забор', 'Навес или беседка', 'Другое' );
+	return array( 'Каркас откатных ворот', 'Каркас распашных ворот', 'Калитка', 'Навес для авто', 'Каркас мебели', 'Обувница', 'Забор', 'Навес или беседка', 'Другое' );
 }
 
 /** Product preselected by page slug when the caller gave none. */
@@ -17,6 +17,7 @@ function kv_lead_product_for_page(): string {
 		'karkas-otkatnyh-vorot'   => 'Каркас откатных ворот',
 		'karkas-raspashnyh-vorot' => 'Каркас распашных ворот',
 		'kalitki'                 => 'Калитка',
+		'navesy-dlya-avto'        => 'Навес для авто',
 	);
 	$post = get_queried_object();
 	return ( $post instanceof WP_Post && isset( $map[ $post->post_name ] ) ) ? $map[ $post->post_name ] : '';
