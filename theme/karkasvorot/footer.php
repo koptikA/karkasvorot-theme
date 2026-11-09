@@ -3,7 +3,7 @@
 	<div class="kv-container kv-footer__inner">
 		<div class="kv-footer__col">
 			<p class="kv-footer__logo">KARKASVOROT.BY</p>
-			<p class="kv-footer__region">Минск и Минская область, доставка каркасов по Беларуси</p>
+			<p class="kv-footer__region">Изготовление в Минске · доставка и монтаж по всей Беларуси</p>
 
 		</div>
         <nav class="kv-footer__col kv-footer__navigation" aria-label="Разделы сайта">
@@ -32,7 +32,7 @@
 			</ul>
 			<?php get_template_part( 'template-parts/social-links' ); ?>
 		</div>
-		<?php if ( current_user_can( 'manage_options' ) || '' !== kv_opt( 'org_name' ) . kv_opt( 'unp' ) . kv_opt( 'address' ) . kv_opt( 'registration' ) ) : ?>
+		<?php if ( current_user_can( 'manage_options' ) || '' !== kv_opt( 'org_name' ) . kv_opt( 'unp' ) . kv_opt( 'address' ) ) : ?>
 		<div class="kv-footer__col">
 			<h2 class="kv-footer__title">Реквизиты</h2>
 			<ul class="kv-footer__list">
@@ -40,7 +40,6 @@
 				kv_footer_field( 'org_name', 'Наименование' );
 				kv_footer_field( 'unp', 'УНП' );
 				kv_footer_field( 'address', 'Адрес' );
-				kv_footer_field( 'registration', 'Регистрация' );
 				?>
 			</ul>
 		</div>

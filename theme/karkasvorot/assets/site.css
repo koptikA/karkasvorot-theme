@@ -259,7 +259,6 @@ input, select, textarea, button { font: inherit; }
 .kv-hero__lead { max-width: 53%; font-size: 1rem; line-height: 1.8; color: var(--kv-on-dark-muted); margin-top: 1.5rem; }
 .kv-hero .kv-button { margin-top: 1rem; min-width: 13rem; }
 .kv-button, .search-submit, .kv-form__submit { min-height: 3.5rem; padding-inline: 1.6rem; gap: 2rem; transition: background-color 150ms ease-out, transform 150ms cubic-bezier(.2,0,0,1); }
-.kv-button::after { content: "↗"; font-size: 1.3em; font-weight: 400; }
 .kv-button:hover, .search-submit:hover, .kv-form__submit:hover { background: var(--kv-accent-hover); }
 .kv-button:active, .search-submit:active, .kv-form__submit:active, .kv-cookie__btn:active { transform: scale(.96); }
 .kv-prices, .kv-works, .kv-steps, .kv-faq, .kv-other { margin-top: 5rem; }
@@ -277,7 +276,6 @@ input, select, textarea, button { font: inherit; }
 .kv-price__list { font-size: .8rem; line-height: 1.8; margin-bottom: 1.5rem; padding-left: 1rem; }
 .kv-price__list li::marker { color: var(--kv-accent-text); }
 .kv-price__more { display: flex; align-items: center; justify-content: space-between; padding-top: .9rem; border-top: 1px solid var(--kv-border); font-size: .85rem; text-decoration: none; }
-.kv-price__more::after { content: "↗"; font-size: 1.3rem; }
 .kv-price-note { max-width: 46rem; line-height: 1.7; padding-left: 1rem; border-left: 2px solid var(--kv-border); font-size: .75rem; }
 .kv-works__grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.8rem 1.25rem; }
 .kv-work { background: transparent; border-radius: 0; }
@@ -285,7 +283,6 @@ input, select, textarea, button { font: inherit; }
 .kv-work__img { outline: 1px solid rgb(0 0 0 / .1); outline-offset: -1px; transition: transform 150ms cubic-bezier(.2,0,0,1); }
 .kv-work:hover .kv-work__img { transform: scale(1.025); }
 .kv-work__caption { padding: 1rem 1.6rem 0 0; font-size: .85rem; line-height: 1.65; position: relative; }
-.kv-work__caption::after { content: "↗"; position: absolute; right: .1rem; top: 1rem; color: var(--kv-accent-text); }
 .kv-work__caption a { display: block; }
 .kv-steps { padding: 3rem; background: var(--kv-surface); border-radius: var(--kv-radius-lg); }
 .kv-steps__list { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 2rem; margin: 0; }

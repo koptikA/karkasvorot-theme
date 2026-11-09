@@ -46,8 +46,8 @@ def check(base, s):
         for messenger in ("Viber", "Telegram"):
             if 'aria-label="Написать в %s"' % messenger not in part:
                 fails.append(label + ": нет доступной иконки " + messenger)
-    if "Минская область" not in footer:
-        fails.append("в подвале нет зоны работы «Минская область»")
+    if "Беларус" not in footer:
+        fails.append("в подвале нет зоны работы «по всей Беларуси»")
     if not re.search(r'<html[^>]+lang="ru(-RU)?"', html):
         fails.append("<html lang> не ru/ru-RU")
     if not re.search(r"<body[^>]+data-metrika=", html):

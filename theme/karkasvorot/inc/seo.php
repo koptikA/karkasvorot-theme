@@ -59,7 +59,7 @@ function kv_seo_plain_title( int $id ): string {
 function kv_seo_title(): string {
 	$tail = ' | ' . KV_BRAND;
 	if ( is_front_page() ) {
-		return 'Каркасы ворот в Минске — изготовление и монтаж' . $tail;
+		return 'Каркасы ворот на заказ — Минск и вся Беларусь' . $tail;
 	}
 	if ( is_post_type_archive( 'work' ) ) {
 		$paged = (int) get_query_var( 'paged' );
@@ -79,11 +79,11 @@ function kv_seo_title(): string {
 	}
 	if ( 'page-service.php' === get_page_template_slug( $id ) ) {
 		$from = kv_seo_price( $id );
-		$city = false === mb_stripos( $name, 'в Минске' ) ? ' в Минске' : '';
+		$city = false === mb_stripos( $name, 'в Минске' ) ? ' в Минске и по Беларуси' : '';
 		return $name . $city . ( '' !== $from ? ' — цена от ' . $from . ' BYN' : '' ) . $tail;
 	}
 	if ( 'kontakty' === get_post_field( 'post_name', $id ) ) {
-		return 'Контакты — заказать каркас ворот в Минске' . $tail;
+		return 'Контакты — заказать каркас ворот в Минске и по Беларуси' . $tail;
 	}
 	return $name . $tail;
 }
@@ -91,7 +91,7 @@ function kv_seo_title(): string {
 /** Raw description: meta → excerpt → first ~155 chars of the text → a fallback with the title. */
 function kv_seo_description(): string {
 	if ( is_post_type_archive( 'work' ) ) {
-		return 'Фото реальных работ ' . KV_BRAND . ': каркасы откатных и распашных ворот, калитки, навесы, заборы и мебель. Минск и Минская область.';
+		return 'Фото реальных работ ' . KV_BRAND . ': каркасы откатных и распашных ворот, калитки, навесы, заборы и мебель. Минск и вся Беларусь.';
 	}
 	$id   = is_singular() || is_front_page() ? get_queried_object_id() : 0;
 	$text = $id ? trim( (string) get_post_meta( $id, '_kv_seo_description', true ) ) : '';
@@ -106,9 +106,9 @@ function kv_seo_description(): string {
 		return $text;
 	}
 	if ( is_front_page() ) {
-		return 'Изготовление каркасов откатных и распашных ворот, калиток, мебели и навесов в Минске и Минской области. Доставка каркасов по Беларуси.';
+		return 'Изготовление каркасов откатных и распашных ворот, калиток, мебели и навесов в Минске. Доставка и монтаж по всей Беларуси.';
 	}
-	return $id ? kv_seo_name( $id ) . '. ' . KV_BRAND . ' — каркасы ворот и калиток в Минске и Минской области.' : '';
+	return $id ? kv_seo_name( $id ) . '. ' . KV_BRAND . ' — каркасы ворот и калиток: Минск и вся Беларусь.' : '';
 }
 
 /** @return array{url:string,w:int,h:int} og:image. */
@@ -148,7 +148,7 @@ function kv_breadcrumbs(): array {
 function kv_seo_area(): array {
 	return array(
 		array( '@type' => 'City', 'name' => 'Минск' ),
-		array( '@type' => 'AdministrativeArea', 'name' => 'Минская область' ),
+		array( '@type' => 'Country', 'name' => 'Беларусь' ),
 	);
 }
 

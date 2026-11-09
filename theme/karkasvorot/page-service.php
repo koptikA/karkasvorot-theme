@@ -28,7 +28,7 @@ while ( have_posts() ) :
 	?>
 	<article <?php post_class( 'kv-container kv-section kv-service' ); ?>>
 		<?php get_template_part( 'template-parts/breadcrumbs' ); ?>
-		<h1 class="kv-title"><?php echo esc_html( $kv_is_misc ? 'Каркасы мебели, обувницы, заборы и навесы в Минске' : $kv_title . ' в Минске' ); ?></h1>
+		<h1 class="kv-title"><?php echo esc_html( $kv_is_misc ? 'Каркасы мебели, обувницы, заборы и навесы — Минск и вся Беларусь' : $kv_title . ' в Минске и по Беларуси' ); ?></h1>
 		<div class="kv-service__top">
 			<div class="kv-service__intro kv-content"><?php echo $kv_parts['']; // phpcs:ignore WordPress.Security.EscapeOutput -- the_content. ?></div>
 			<div class="kv-service__price">

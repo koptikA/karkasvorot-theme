@@ -6,11 +6,11 @@ $kv_uri = get_template_directory_uri();
 <div class="kv-container kv-section kv-home kv-home--visual">
  <section class="kv-intro" aria-labelledby="kv-intro-title">
   <div class="kv-intro__copy">
-   <p class="kv-eyebrow">Мастерская металлоконструкций · Минск</p>
+   <p class="kv-eyebrow">Мастерская металлоконструкций · Минск · вся Беларусь</p>
    <h1 id="kv-intro-title">Каркасы ворот.<br><span>Под ваш размер.</span></h1>
-   <p class="kv-intro__lead">Изготовим, доставим и смонтируем.<br>В Минске и Минской области.</p>
+   <p class="kv-intro__lead">Изготовим, доставим и смонтируем.<br>В Минске и по всей Беларуси.</p>
    <a class="kv-button" href="#zayavka">Рассчитать мой заказ</a>
-   <a class="kv-intro__link" href="#raboty">Посмотреть работы <span aria-hidden="true">↓</span></a>
+   <a class="kv-intro__link" href="#raboty">Посмотреть работы</a>
   </div>
   <figure class="kv-intro__photo">
    <img src="<?php echo esc_url( $kv_uri . '/assets/work-gates.webp' ); ?>" width="516" height="265" alt="Ворота с калиткой из металлоштакетника — выполненная работа" fetchpriority="high" loading="eager">
@@ -28,14 +28,14 @@ $kv_uri = get_template_directory_uri();
    ?>
    <a class="kv-select__card" href="<?php echo esc_url( get_permalink( $kv_page ) ); ?>">
     <div class="kv-select__image"><?php echo wp_get_attachment_image( $kv_ill, 'kv-card', false, array( 'loading' => 'lazy', 'alt' => 'Иллюстрация: ' . $kv_label ) ); ?></div>
-    <h3><?php echo esc_html( $kv_label ); ?><span aria-hidden="true">↗</span></h3>
+    <h3><?php echo esc_html( $kv_label ); ?></h3>
    </a>
    <?php endforeach; ?>
   </div>
   <p class="kv-select__note">Стоимость рассчитывается индивидуально — по размерам и комплектации.</p>
  </section>
  <section class="kv-showcase" id="raboty" aria-labelledby="kv-showcase-title">
-  <div class="kv-home-heading"><div><p class="kv-eyebrow">Из металла — в жизнь</p><h2 id="kv-showcase-title">Вот что получается.</h2></div><a href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>">Все работы <span aria-hidden="true">↗</span></a></div>
+  <div class="kv-home-heading"><div><p class="kv-eyebrow">Из металла — в жизнь</p><h2 id="kv-showcase-title">Вот что получается.</h2></div><a href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>">Все работы</a></div>
   <div class="kv-showcase__grid">
    <?php foreach ( kv_works( 0, 3 ) as $kv_work ) { get_template_part( 'template-parts/work-card', null, array( 'work' => $kv_work, 'short_caption' => true ) ); } ?>
   </div>

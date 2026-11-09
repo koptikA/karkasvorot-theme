@@ -157,7 +157,7 @@ def _plugin_silence(base):
     """Render the front page head inside WP with and without a fake WPSEO_VERSION."""
     own, quiet = render_head(base, "", FRONT), render_head(base, "define('WPSEO_VERSION', 'kv-test');", FRONT)
     fails = []
-    for needle in ('name="description"', 'property="og:title"', "application/ld+json", "изготовление и монтаж | KARKASVOROT.BY</title>"):
+    for needle in ('name="description"', 'property="og:title"', "application/ld+json", "Минск и вся Беларусь | KARKASVOROT.BY</title>"):
         if needle not in own:
             fails.append("главная без плагина: в <head> нет %s" % needle)
         if needle in quiet:
