@@ -1,0 +1,47 @@
+{
+  "results": [
+    {
+      "width": 320,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "path": "/karkas-otkatnyh-vorot/",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "/karkas-otkatnyh-vorot/",
+      "overflow": false
+    },
+    {
+      "width": 896,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 896,
+      "path": "/karkas-otkatnyh-vorot/",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "path": "/karkas-otkatnyh-vorot/",
+      "overflow": false
+    }
+  ],
+  "focusOutline": "solid",
+  "reducedMotion": "0s",
+  "text200PercentOverflow": false
+}

@@ -67,3 +67,7 @@ Design will be done later by Astra6. Its result then has to be ported into `asse
 ## Completed 2026-11-09 by Codex
 
 Ticket 05 is complete. Full local suite including Lighthouse: GREEN. Deliverables: `docs/zapusk.md`, `docs/dizain-brif.md`, `docs/screens/`, `docs/proverka-05.md`, `dist/karkasvorot.zip`. Zip uploaded and activated on a clean local Playground. Production was not accessed. Next step: Astra6 design, then rerun checks and rebuild the zip; owner fills missing business data and approves launch. Priority confirmed by owner: organic-search enquiries and orders, not appearance alone.
+
+## Visual design completed 2026-11-09
+
+Owner requested implementation. CSS design and explicit priority hero image applied; PHP/SEO/form logic unchanged. Updated screenshots and zip, full suite including Lighthouse GREEN. See `docs/oformlenie.md`. Local preview on port 9425 remains available for owner review. Production untouched.

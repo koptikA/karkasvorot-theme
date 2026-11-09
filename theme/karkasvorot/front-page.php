@@ -6,6 +6,7 @@ get_header();
 ?>
 <div class="kv-container kv-section kv-home">
 	<section class="kv-hero">
+		<img class="kv-hero__image" src="<?php echo esc_url( get_template_directory_uri() . '/assets/work-gates.webp' ); ?>" width="516" height="265" alt="Ворота с калиткой из металлоштакетника — выполненная работа" fetchpriority="high" decoding="async">
 		<h1 class="kv-hero__title">Изготовление и монтаж каркасов ворот и металлоконструкций в Минске и области</h1>
 		<?php
 		while ( have_posts() ) {
@@ -25,7 +26,7 @@ get_header();
 			<div class="kv-prices__grid">
 				<?php
 				foreach ( $kv_services as $kv_i => $kv_page ) {
-					get_template_part( 'template-parts/price-card', null, array( 'page' => $kv_page, 'link' => true, 'first' => 0 === $kv_i ) );
+					get_template_part( 'template-parts/price-card', null, array( 'page' => $kv_page, 'link' => true, 'first' => false ) );
 				}
 				?>
 			</div>

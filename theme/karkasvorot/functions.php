@@ -51,6 +51,10 @@ add_action( 'wp_enqueue_scripts', function () {
 } );
 
 add_action( 'wp_head', function () {
+	// Discover the first-screen photograph before styles finish loading.
+	if ( is_front_page() ) {
+		echo '<link rel="preload" as="image" fetchpriority="high" href="' . esc_url( get_template_directory_uri() . '/assets/work-gates.webp' ) . '">' . "\n";
+	}
 	$font = get_template_directory_uri() . '/assets/fonts/manrope-cyrillic.woff2';
 	echo '<link rel="preload" href="' . esc_url( $font ) . '" as="font" type="font/woff2" crossorigin>' . "\n";
 }, 1 );
