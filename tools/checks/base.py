@@ -34,8 +34,9 @@ def check(base, s):
         fails.append("нет <footer>")
     if re.search(r"источник", footer, re.I):
         fails.append("в подвале шаблонное «источник: URL»")
-    if re.search(r">\s*Реквизиты\s*<", footer):
-        fails.append("посетителю виден заголовок «Реквизиты» при пустых реквизитах")
+    # Requisites are known (owner, 2026-11-09): seller name and УНП must be shown to visitors.
+    if "191469362" not in footer or "Краснолобов" not in footer:
+        fails.append("в подвале нет реквизитов продавца (ИП Краснолобов, УНП 191469362)")
     # Region moved out of the compact header by owner-approved design.
     if "Минск" not in _part(html, "main"):
         fails.append("главная: нет региона работы")
