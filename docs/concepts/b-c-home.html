@@ -103,6 +103,35 @@ input[type=range]{width:100%;accent-color:var(--hot);height:30px}
 .grid figcaption{position:absolute;left:0;bottom:0;right:0;padding:30px 14px 12px;font-family:var(--mono);font-size:12px;background:linear-gradient(transparent,rgb(0 0 0 / .78))}
 .more{font-family:var(--mono);font-size:13px;color:var(--hot2)}
 
+
+/* orbit gallery */
+.orbit{--tint:#15110f;position:relative;height:calc(var(--n) * 80vh);padding:0;background:var(--tint);transition:background .8s ease}
+.orbit__pin{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-columns:1fr 1.25fr;align-items:center;padding:0 var(--pad)}
+.orbit__band{position:absolute;left:0;right:0;top:50%;height:46%;transform:translateY(-50%);background:linear-gradient(90deg,transparent,rgb(255 106 26 / .07) 55%,rgb(255 106 26 / .14));pointer-events:none}
+.orbit__text{position:relative;z-index:20;max-width:520px}
+.orbit__titles{position:relative;height:clamp(110px,14vw,190px);margin:16px 0 22px}
+.orbit__title{position:absolute;inset:0 auto 0 0;white-space:nowrap;font-family:var(--head);text-transform:uppercase;letter-spacing:-.03em;line-height:.95;clip-path:inset(0 100% 0 0);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+.orbit__title.is-on{clip-path:inset(0 0 0 0)}
+.orbit__title b{display:block;font-weight:800;font-size:clamp(34px,5vw,76px);color:var(--on-dark)}
+.orbit__title span{display:block;font-weight:500;font-size:clamp(22px,3vw,44px);color:transparent;-webkit-text-stroke:1.2px var(--hot2)}
+.orbit__card{display:grid;grid-template-columns:auto 1fr;gap:14px 18px;align-items:center;border:1px solid var(--line-d);background:rgb(0 0 0 / .25);padding:16px 18px;max-width:420px}
+.orbit__count{font-family:var(--head);font-weight:800;font-size:34px;color:var(--hot)}
+.orbit__count small{font-size:14px;color:var(--muted)}
+.orbit__cap{font-size:15px;line-height:1.45;color:#cfd2d4}
+.orbit__card a{grid-column:1/-1;font-family:var(--mono);font-size:13px;color:var(--hot2)}
+.orbit__stage{position:relative;height:100%}
+.orbit__item{position:absolute;left:50%;top:50%;width:min(36vw,520px);aspect-ratio:4/3;margin:calc(min(36vw,520px) * -.375) 0 0 calc(min(36vw,520px) * -.5);will-change:transform;transform-origin:50% 50%}
+.orbit__item img{width:100%;height:100%;object-fit:cover;border:6px solid #f2f0e9;box-shadow:0 30px 60px -20px rgb(0 0 0 / .8)}
+.orbit__hint{position:absolute;left:var(--pad);bottom:24px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+@media (max-width:900px){
+ .orbit__pin{grid-template-columns:1fr;grid-template-rows:1fr auto;align-items:end;padding-bottom:70px}
+ .orbit__stage{position:absolute;inset:0 0 40% 0}
+ .orbit__item{width:72vw;margin:calc(72vw * -.375) 0 0 -36vw;top:40%}
+ .orbit__titles{height:96px;margin:8px 0 12px}
+ .orbit__band{top:34%;height:40%}
+}
+@media (prefers-reduced-motion:reduce){.orbit__title{transition:none}}
+
 /* steps */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--hot)}
 .steps div{padding:24px 22px 0 0}
@@ -200,15 +229,16 @@ footer{padding:40px var(--pad)}
  </div>
 </section>
 
-<section class="grid-bg" id="raboty">
- <div class="head"><div><div class="tag">Сделано в нашей мастерской</div><h2>Наши работы</h2></div><a class="more" href="#">Все работы →</a></div>
- <div class="grid">
-  <figure><img src="../../tools/fixtures/uploads/2026/09/kovanye-vorota-s-kirpichnymi-stolbami.jpg" alt="Кованые ворота с калиткой"><figcaption>Кованые ворота с калиткой</figcaption></figure>
-  <figure><img src="../../tools/fixtures/uploads/2025/07/slider4.png" alt="Ворота из металлического штакетника"><figcaption>Ворота из штакетника</figcaption></figure>
-  <figure><img src="../../tools/fixtures/uploads/2025/07/slider2.jpg" alt="Забор с калиткой"><figcaption>Забор и калитка</figcaption></figure>
-  <figure><img src="../../tools/fixtures/uploads/2026/09/naves-dlya-mashin-karkas-vorot-by.jpg" alt="Навес для машины"><figcaption>Навес для машины</figcaption></figure>
-  <figure><img src="../../tools/fixtures/uploads/2025/07/slider7.jpg" alt="Каркасы мебели"><figcaption>Каркасы мебели</figcaption></figure>
-  <figure><img src="../../tools/fixtures/uploads/2026/09/sadovaya-bosedka-barbekyu-karkas.jpg" alt="Беседка с мангалом"><figcaption>Беседка с мангалом</figcaption></figure>
+<section class="orbit" id="raboty" style="--n:7" aria-label="Наши работы">
+ <div class="orbit__pin">
+  <div class="orbit__band" aria-hidden="true"></div>
+  <div class="orbit__text">
+   <div class="tag">Сделано в нашей мастерской</div>
+   <div class="orbit__titles" aria-hidden="true"><div class="orbit__title is-on"><b>Кованые</b><span>ворота</span></div><div class="orbit__title"><b>Ворота</b><span>из штакетника</span></div><div class="orbit__title"><b>Навес</b><span>для машины</span></div><div class="orbit__title"><b>Каркасы</b><span>мебели</span></div><div class="orbit__title"><b>Беседка</b><span>с мангалом</span></div><div class="orbit__title"><b>Забор</b><span>и ворота</span></div><div class="orbit__title"><b>Обувница</b><span>сварная</span></div></div>
+   <div class="orbit__card"><div class="orbit__count"><b>01</b><small> / 07</small></div><p class="orbit__cap" aria-live="polite">Кованые ворота с калиткой и кирпичными столбами</p><a href="#">Все работы</a></div>
+  </div>
+  <div class="orbit__stage"><figure class="orbit__item"><img src="../../tools/fixtures/uploads/2026/09/kovanye-vorota-s-kirpichnymi-stolbami.jpg" alt="Кованые ворота с калиткой и кирпичными столбами"></figure><figure class="orbit__item"><img src="../../tools/fixtures/uploads/2025/07/slider4.png" alt="Распашные ворота из металлического штакетника"></figure><figure class="orbit__item"><img src="../../tools/fixtures/uploads/2026/09/naves-dlya-mashin-karkas-vorot-by.jpg" alt="Навес для машины на металлическом каркасе"></figure><figure class="orbit__item"><img src="../../tools/fixtures/uploads/2025/07/slider7.jpg" alt="Геометрические каркасы столов и тумб"></figure><figure class="orbit__item"><img src="../../tools/fixtures/uploads/2026/09/sadovaya-bosedka-barbekyu-karkas.jpg" alt="Садовая беседка с мангалом и поликарбонатом"></figure><figure class="orbit__item"><img src="../../tools/fixtures/uploads/2025/07/slider2.jpg" alt="Забор с воротами из металлического прутка"></figure><figure class="orbit__item"><img src="../../tools/fixtures/uploads/2025/07/slider10.jpg" alt="Сварная обувница с декоративными вставками"></figure></div>
+  <div class="orbit__hint" aria-hidden="true">Листайте вниз</div>
  </div>
 </section>
 
@@ -224,7 +254,7 @@ footer{padding:40px var(--pad)}
 
 <section class="order" id="zayavka">
  <div class="order-in">
-  <div><div class="tag">Расчёт бесплатно</div><h2>Пришлите размер —<br><b>посчитаем</b></h2><p class="lead">Мастер перезвонит, уточнит детали и назовёт стоимость. Viber и Telegram тоже подойдут.</p></div>
+  <div><div class="tag">Расчёт бесплатно</div><h2>Пришлите размер —<br><b>посчитаем</b></h2><p class="lead">Мастер перезвонит, уточнит детали и назовёт стоимость. Viber, Telegram и WhatsApp тоже подойдут.</p></div>
   <form onsubmit="return false">
    <label>Имя<input autocomplete="name"></label>
    <label>Телефон *<input type="tel" placeholder="+375 29 123-45-67" required></label>
@@ -241,10 +271,11 @@ footer{padding:40px var(--pad)}
   <div><small>Изготовитель</small><div class="big">KARKASVOROT.BY</div><p>ИП Краснолобов Максим Валерьевич<br>УНП 191469362</p></div>
   <div><small>Изделия</small><p>Откатные и распашные ворота<br>Калитки, навесы, заборы<br>Каркасы мебели</p></div>
   <div><small>География</small><p>Изготовление — Минск<br>Доставка и монтаж — вся Беларусь</p></div>
-  <div><small>Связь</small><p><a href="tel:+375447726823">+375 44 772-68-23</a><br>Viber · Telegram<br>m.krasnolobov@gmail.com</p></div>
+  <div><small>Связь</small><p><a href="tel:+375447726823">+375 44 772-68-23</a><br><a href="viber://chat?number=%2B375447726823">Viber</a> · <a href="https://t.me/Maksimus05061981">Telegram</a> · <a href="https://wa.me/375447726823">WhatsApp</a><br>m.krasnolobov@gmail.com</p></div>
  </div>
 </footer>
 
 <script src="b-c-calc.js"></script>
+<script src="b-c-orbit.js"></script>
 </body>
 </html>
