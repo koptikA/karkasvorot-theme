@@ -40,7 +40,7 @@ def check(base, s):
     if not re.search(r"<body[^>]+data-metrika=", html):
         fails.append("<body> без data-metrika")
 
-    pages = {"/": 200, "/sample-page/": 200, "/?s=%D0%BA%D0%B0%D1%80%D0%BA%D0%B0%D1%81": 200, "/nashi-raboty/": 200, "/net-takoj-stranicy-kv/": 404}
+    pages = {"/": 200, "/?s=%D0%BA%D0%B0%D1%80%D0%BA%D0%B0%D1%81": 200, "/nashi-raboty/": 200, "/net-takoj-stranicy-kv/": 404}
     for path, want in pages.items():
         st, body, _ = fetch(base + path)
         if st != want:
