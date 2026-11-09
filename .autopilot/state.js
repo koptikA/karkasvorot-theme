@@ -1,7 +1,7 @@
 window.STATE =
 {
   "slug": "karkasvorot-site",
-  "dir": "2026-11-09-karkasvorot-site--wip",
+  "dir": "2026-11-09-karkasvorot-site",
   "title": "Новый сайт karkasvorot.by",
   "mode": "semi",
   "depth": "normal",
@@ -11,8 +11,8 @@ window.STATE =
   "memoryFile": "CLAUDE.md",
   "skillDir": "C:/Users/User/.claude/skills/autopilot",
   "startedAt": "2026-11-09T12:40:31+03:00",
-  "updatedAt": "2026-11-09T13:45:31+03:00",
-  "finishedAt": null,
+  "updatedAt": "2026-11-09T20:36:37+03:00",
+  "finishedAt": "2026-11-09T20:36:37+03:00",
   "stages": [
     {
       "id": "preflight",
@@ -47,19 +47,23 @@ window.STATE =
     },
     {
       "id": "build",
-      "status": "active",
+      "status": "done",
       "startedAt": "2026-11-09T12:54:10+03:00",
-      "note": "4 из 5 тасков готовы"
+      "note": "5 из 5 тасков готовы (05 — Codex)",
+      "finishedAt": "2026-11-09T20:28:45+03:00"
     },
     {
       "id": "review",
-      "status": "active",
+      "status": "done",
       "startedAt": "2026-11-09T13:11:02+03:00",
-      "note": "проверено 4 из 5"
+      "note": "5 из 5 тасков готовы (05 — Codex)",
+      "finishedAt": "2026-11-09T20:28:45+03:00"
     },
     {
       "id": "final",
-      "status": "pending"
+      "status": "done",
+      "startedAt": "2026-11-09T20:28:45+03:00",
+      "finishedAt": "2026-11-09T20:36:37+03:00"
     }
   ],
   "requirements": {
@@ -217,11 +221,17 @@ window.STATE =
         "docs/",
         "dist/"
       ],
-      "status": "in-progress",
+      "status": "done",
       "retries": 0,
       "repairs": 0,
-      "handoffs": 0,
-      "startedAt": "2026-11-09T13:45:31+03:00"
+      "handoffs": 1,
+      "startedAt": "2026-11-09T13:45:31+03:00",
+      "finishedAt": "2026-11-09T20:28:45+03:00",
+      "commit": "5193e2c (+1d55c23, 28aab3a — оформление и каталог)",
+      "tests": {
+        "passed": 8,
+        "failed": 0
+      }
     }
   ],
   "singlePass": null,
@@ -290,11 +300,20 @@ window.STATE =
     "seo.py: тестовые страницы услуг не удаляются; подмена заголовка через shutdown; дубли _location/_render с stand.py → таск 05",
     "leads: тот же человек, тот же телефон, тот же kv_req (без JS / «Назад») — вторая заявка отбрасывается; первая сохранена",
     "leads.php:36-43 — ответ ?zayavka=err без nocache → таск 05",
-    "leads.py:143 — восстановление metrika_id искажает значение → таск 05"
+    "leads.py:143 — восстановление metrika_id искажает значение → таск 05",
+    "таск 05 и оформление выполнены Codex вне ревью автопилота (ревьюеры их не видели)"
   ],
   "reviewers": {
     "manifestSpec": "rev-ms",
     "craft": "rev-craft"
   },
-  "blind": null
+  "blind": {
+    "verdict": "проходит, блокирующих нет",
+    "drift": [
+      "услуги без JSON-LD Service (выводится только при цене, а цены скрыты)",
+      "подписи работ с SEO-хвостами из старых alt",
+      "на странице откатных ворот нет фото работ (нет таких фото в медиатеке)",
+      "письмо о заявке не проверено — на стенде нет почты"
+    ]
+  }
 }
