@@ -332,7 +332,8 @@ input, select, textarea, button { font: inherit; }
 	.kv-products__list a { border: 0; }
 	.kv-mobilebar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.5fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; height: var(--kv-mobilebar-h); background: var(--kv-dark2); border-top: 1px solid var(--kv-line2); }
 	.kv-mobilebar > .kv-socials { display: contents; } /* each icon is its own equal grid column */
-	.kv-mobilebar .kv-social { display: flex; align-items: center; justify-content: center; }
+	.kv-mobilebar .kv-social, .kv-mobilebar__link { display: flex; align-items: center; justify-content: center; width: auto; height: 100%; align-self: stretch; justify-self: stretch; }
+	.kv-mobilebar .kv-contact-icon { width: 32px; height: 32px; display: block; }
 	.kv-mobilebar__link { display: flex; align-items: center; justify-content: center; color: var(--kv-text); font-weight: 700; text-decoration: none; }
 	.kv-mobilebar__link--phone .kv-contact-icon { width: 32px; height: 32px; }
 	.kv-mobilebar__link--order { background: var(--kv-hot); color: var(--kv-on-hot); }
