@@ -32,7 +32,7 @@ $kv_items = array( 'Откатные ворота', 'Распашные воро
 				?>
 				<a class="kv-product" href="<?php echo esc_url( get_permalink( $kv_page ) ); ?>">
 					<span class="kv-product__no"><?php echo esc_html( sprintf( '%02d', $kv_n + 1 ) ); ?></span>
-					<?php echo $kv_ill ? wp_get_attachment_image( $kv_ill, 'kv-card', false, array( 'class' => 'kv-product__img', 'loading' => 'lazy', 'alt' => 'Иллюстрация: ' . $kv_label ) ) : ''; ?>
+					<?php $kv_draw = kv_page_drawing( $kv_page, 'kv-product__img' ); echo '' !== $kv_draw ? $kv_draw : ( $kv_ill ? wp_get_attachment_image( $kv_ill, 'kv-card', false, array( 'class' => 'kv-product__img', 'loading' => 'lazy', 'alt' => 'Иллюстрация: ' . $kv_label ) ) : '' ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?>
 					<h3><?php echo esc_html( $kv_label ); ?></h3>
 					<?php if ( $kv_spec ) : ?>
 						<span class="kv-product__spec"><?php echo implode( '<br>', array_map( function ( $line ) { return preg_replace( '/\d[\d,]*(?:×[\d,]+)+/u', '<b>$0</b>', esc_html( $line ) ); }, $kv_spec ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped per line. ?></span>

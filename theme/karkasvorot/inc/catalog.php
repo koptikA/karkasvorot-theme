@@ -103,3 +103,17 @@ add_filter( 'the_title', function ( $title, $id ) {
     );
     return in_array( (string) get_post_field( 'post_title', $id, 'raw' ), $legacy, true ) ? $names[ $file ] : $title;
 }, 10, 2 );
+
+/** Theme-drawn illustration for a service page without an attachment drawing ('' when none). */
+function kv_page_drawing( WP_Post $page, string $class, bool $eager = false ): string {
+	$map = array( 'navesy-dlya-avto' => array( 'karkas-navesa-dlya-avto', 'Иллюстрация каркаса навеса для авто' ) );
+	if ( ! isset( $map[ $page->post_name ] ) ) {
+		return '';
+	}
+	$rel  = '/assets/catalog/' . $map[ $page->post_name ][0] . '.webp';
+	$size = is_file( get_template_directory() . $rel ) ? getimagesize( get_template_directory() . $rel ) : false;
+	if ( ! $size ) {
+		return '';
+	}
+	return sprintf( '<img class="%s" src="%s" width="%d" height="%d" alt="%s"%s>', esc_attr( $class ), esc_url( get_template_directory_uri() . $rel ), $size[0], $size[1], esc_attr( $map[ $page->post_name ][1] ), $eager ? ' fetchpriority="high"' : ' loading="lazy"' );
+}

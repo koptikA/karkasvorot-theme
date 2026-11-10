@@ -11,7 +11,10 @@ $kv_title = isset( $args['title'] ) ? $args['title'] : get_the_title( $kv_page )
 $kv_url   = ! empty( $args['link'] ) ? get_permalink( $kv_page ) : '';
 ?>
 <div class="kv-price">
-	<?php if ( $kv_ill && wp_attachment_is_image( $kv_ill ) ) : ?>
+	<?php $kv_draw = kv_page_drawing( $kv_page, 'kv-price__img', ! empty( $args['first'] ) ); ?>
+	<?php if ( '' !== $kv_draw ) : ?>
+		<div class="kv-price__media"><?php echo $kv_draw; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside. ?></div>
+	<?php elseif ( $kv_ill && wp_attachment_is_image( $kv_ill ) ) : ?>
 		<div class="kv-price__media">
 			<?php
 			$kv_alt = (string) get_post_meta( $kv_ill, '_wp_attachment_image_alt', true );

@@ -381,5 +381,5 @@ input, select, textarea, button { font: inherit; }
 .kv-crew__list li::before { content: ""; position: absolute; left: 0; top: .6em; width: 10px; height: 2px; background: var(--kv-hot); }
 .kv-crew__go { margin: 0; color: #b9bec4; line-height: 1.55; }
 .kv-crew__go span { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.kv-crew__go .kv-btn { flex: 1 1 11rem; text-align: center; }
+.kv-crew__go .kv-btn { flex: 1 1 auto; text-align: center; white-space: nowrap; }
 @media (max-width: 56rem) { .kv-crew { grid-template-columns: minmax(0, 1fr); } .kv-calc__tabs button { flex: 1 1 40%; } }
