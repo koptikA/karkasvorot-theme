@@ -172,7 +172,7 @@ function kv_install_works(): array {
 		'slider8.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
 		'slider7.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
 		'slider1.jpg'                               => array( 'karkas-otkatnyh-vorot', '' ), // owner: a sliding gate
-		'slider2.jpg'                               => array( '', '' ),
+		'slider2.jpg'                               => array( 'karkas-raspashnyh-vorot', '' ), // two-leaf gate on hinges
 		'slider4.png'                               => array( 'karkas-raspashnyh-vorot', '' ),
 	);
 }

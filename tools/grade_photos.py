@@ -3,8 +3,8 @@
     python tools/grade_photos.py --preview OUT.png   # before/after sheet, files untouched
     python tools/grade_photos.py --apply             # grades theme photos in place (originals stay in git)
 
-Grade: highlight-based white balance (40 %, clamped), common exposure, gentle S-curve,
--10 % saturation, slightly cool shadows. Drawings (RGBA catalog webp) are skipped.
+Grade: highlight-based white balance (60 %, clamped +-10 %), common exposure, S-curve,
+-20 % saturation, cool shadows. Run --apply on ungraded originals only (not twice). Drawings (RGBA catalog webp) are skipped.
 """
 import argparse
 import glob
@@ -28,20 +28,20 @@ def grade(im: Image.Image) -> Image.Image:
     #    removes a sunset/overcast cast without touching product colours (gray-world turned green fences magenta)
     hi = a[lum >= np.percentile(lum, 98)]
     ref = hi.mean(0) if len(hi) else np.ones(3)
-    gain = np.clip(ref.mean() / np.maximum(ref, 1e-3), 0.94, 1.06)
-    a = a * (1 + 0.4 * (gain - 1))
+    gain = np.clip(ref.mean() / np.maximum(ref, 1e-3), 0.90, 1.10)
+    a = a * (1 + 0.6 * (gain - 1))
     # 2. exposure: pull mean brightness 50 % toward a common 0.46
     m = float(np.clip(a, 0, 1).mean())
-    target = m + 0.5 * (0.46 - m)
+    target = m + 0.7 * (0.46 - m)
     a = np.clip(a, 1e-4, 1) ** (np.log(target) / np.log(max(m, 1e-3)))
     # 3. gentle S-curve
-    a = a + 0.08 * (a - 0.5) * (1 - np.abs(2 * a - 1))
+    a = a + 0.14 * (a - 0.5) * (1 - np.abs(2 * a - 1))
     # 4. saturation -10 % overall (luma-preserving, no hue shift)
     l = (a * np.array([0.299, 0.587, 0.114])).sum(-1, keepdims=True)
-    a = l + (a - l) * 0.90
+    a = l + (a - l) * 0.80
     # 5. slightly cool shadows
     shadow = np.clip(1 - a.mean(-1, keepdims=True) * 2, 0, 1)
-    a = a + shadow * np.array([-0.010, 0.0, 0.018])
+    a = a + shadow * np.array([-0.018, 0.0, 0.030])
     return Image.fromarray((np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8))
 
 
