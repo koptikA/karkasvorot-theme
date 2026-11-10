@@ -161,7 +161,7 @@ add_shortcode( 'kv_operator', function () {
 /** Works: file in the media library => [service page slug, «Прочие» section, optional: also shown in these service pages]. */
 function kv_install_works(): array {
 	return array(
-		'kovanye-vorota-s-kirpichnymi-stolbami.jpg' => array( 'karkas-raspashnyh-vorot', '', array( 'kalitki' ) ),
+		'kovanye-vorota-s-kirpichnymi-stolbami.jpg' => array( 'karkas-otkatnyh-vorot', '', array( 'kalitki' ) ), // owner: sliding gate
 		'frame-125.jpg'                             => array( 'karkas-raspashnyh-vorot', '', array( 'kalitki' ) ),
 		'raspashnye-vorota-s-kalitkoj.png'          => array( 'kalitki', '' ), // owner: only in «Калитки», not in «Прочие»
 		'zabor-iz-profnastila-bordo-cena.jpg'       => array( 'prochie-izdeliya', 'zabory' ),
@@ -334,9 +334,11 @@ function kv_install_links( array $ids ) {
 	$work  = function ( string $file ) {
 		return kv_install_work_of( kv_attachment_by_file( $file ) );
 	};
-	$w = $work( 'slider1.jpg' );
-	if ( $w && ! empty( $ids['karkas-raspashnyh-vorot'] ) && ! empty( $ids['karkas-otkatnyh-vorot'] ) && (int) get_post_meta( $w, '_kv_service', true ) === (int) $ids['karkas-raspashnyh-vorot'] ) {
-		update_post_meta( $w, '_kv_service', (string) $ids['karkas-otkatnyh-vorot'] );
+	foreach ( array( 'slider1.jpg', 'kovanye-vorota-s-kirpichnymi-stolbami.jpg' ) as $kv_sliding ) { // owner: both are sliding gates
+		$w = $work( $kv_sliding );
+		if ( $w && ! empty( $ids['karkas-raspashnyh-vorot'] ) && ! empty( $ids['karkas-otkatnyh-vorot'] ) && (int) get_post_meta( $w, '_kv_service', true ) === (int) $ids['karkas-raspashnyh-vorot'] ) {
+			update_post_meta( $w, '_kv_service', (string) $ids['karkas-otkatnyh-vorot'] );
+		}
 	}
 	foreach ( $works as $file => $target ) {
 		$w = empty( $target[2] ) ? 0 : $work( $file );

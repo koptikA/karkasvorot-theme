@@ -97,7 +97,7 @@ echo wp_json_encode( $out );
 ALSO = {  # file -> (main service, «Прочие» section, extra sections)
     "slider1.jpg": ("karkas-otkatnyh-vorot", "", []),
     "frame-125.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
-    "kovanye-vorota-s-kirpichnymi-stolbami.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
+    "kovanye-vorota-s-kirpichnymi-stolbami.jpg": ("karkas-otkatnyh-vorot", "", ["kalitki"]),
     "raspashnye-vorota-s-kalitkoj.png": ("kalitki", "", []),
     "naves-dlya-mashin-karkas-vorot-by.jpg": ("navesy-dlya-avto", "", []),
 }
