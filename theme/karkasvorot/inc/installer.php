@@ -203,6 +203,7 @@ function kv_install_photos(): array {
 		'zelenyy-zabor-s-kalitkoy.jpg'     => array( 'raspashnye-vorota-s-kalitkoj.png', 'Зелёный забор из профнастила с калиткой' ),
 		'obuvnitsa-svarnaya.jpg'           => array( 'slider10.jpg', 'Сварная металлическая обувница с декоративными квадратами на боковинах' ),
 		'vorota-s-pikami.jpg'              => array( 'slider2.jpg', 'Металлические распашные ворота с декоративными пиками' ),
+		'besedka-s-mangalom.jpg'           => array( 'sadovaya-bosedka-barbekyu-karkas.jpg', 'Садовая беседка с мангалом и изогнутой крышей на металлическом каркасе' ),
 		'kovanye-vorota-s-kalitkoy.jpg'    => array( 'kovanye-vorota-s-kirpichnymi-stolbami.jpg', 'Кованые ворота с калиткой между кирпичными столбами' ),
 		'zabor-bordo-profnastil.jpg'       => array( 'zabor-iz-profnastila-bordo-cena.jpg', 'Забор из бордового профнастила с кирпичным столбом' ),
 		'mangal-na-podstavke.jpg'          => array( '', 'Металлический мангал на подставке с боковыми полками во дворе' ),

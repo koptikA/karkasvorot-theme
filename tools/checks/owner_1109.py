@@ -16,6 +16,7 @@ PHOTOS = {  # new file in the theme -> legacy source of the work
     "zelenyy-zabor-s-kalitkoy.jpg": "raspashnye-vorota-s-kalitkoj.png",
     "obuvnitsa-svarnaya.jpg": "slider10.jpg",
     "vorota-s-pikami.jpg": "slider2.jpg",
+    "besedka-s-mangalom.jpg": "sadovaya-bosedka-barbekyu-karkas.jpg",
     "kovanye-vorota-s-kalitkoy.jpg": "kovanye-vorota-s-kirpichnymi-stolbami.jpg",
     "zabor-bordo-profnastil.jpg": "zabor-iz-profnastila-bordo-cena.jpg",
 }
