@@ -215,5 +215,5 @@ add_action( 'template_redirect', function () {
 } );
 
 add_action( 'wp_enqueue_scripts', function () {
-	wp_enqueue_style( 'kv-form', get_template_directory_uri() . '/assets/form.css', array( 'kv-site' ), KV_VERSION );
+	wp_enqueue_style( 'kv-form', get_template_directory_uri() . '/assets/form.css', array( 'kv-site' ), kv_asset_ver( 'form.css' ) );
 } );

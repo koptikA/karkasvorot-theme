@@ -44,10 +44,16 @@ add_action( 'template_redirect', function () {
 	}
 }, 0 );
 
+/** Cache-busting version: file modification time, so browsers pick up every theme update. */
+function kv_asset_ver( string $file ): string {
+	$path = get_template_directory() . '/assets/' . $file;
+	return file_exists( $path ) ? (string) filemtime( $path ) : KV_VERSION;
+}
+
 add_action( 'wp_enqueue_scripts', function () {
 	$uri = get_template_directory_uri() . '/assets/';
-	wp_enqueue_style( 'kv-site', $uri . 'site.css', array(), KV_VERSION );
-	wp_enqueue_script( 'kv-site', $uri . 'site.js', array(), KV_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+	wp_enqueue_style( 'kv-site', $uri . 'site.css', array(), kv_asset_ver( 'site.css' ) );
+	wp_enqueue_script( 'kv-site', $uri . 'site.js', array(), kv_asset_ver( 'site.js' ), array( 'strategy' => 'defer', 'in_footer' => true ) );
 } );
 
 add_action( 'wp_head', function () {
