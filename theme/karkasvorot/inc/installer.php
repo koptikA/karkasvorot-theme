@@ -260,7 +260,7 @@ function kv_install_owner_photos( array $ids, array &$report ) {
 		if ( $work ) {
 			set_post_thumbnail( $work, $att );
 			$report['created'][] = 'photo:' . $file;
-		} elseif ( ! kv_install_work_of( $att ) && ! empty( $ids['prochie-izdeliya'] ) ) {
+		} elseif ( ! kv_install_work_of( $att ) && ! get_page_by_path( 'mangal-na-podstavke', OBJECT, 'work' ) && ! empty( $ids['prochie-izdeliya'] ) ) {
 			$id = wp_insert_post( wp_slash( array( 'post_type' => 'work', 'post_status' => 'publish', 'post_title' => 'Мангал на подставке', 'post_name' => 'mangal-na-podstavke', 'menu_order' => 100 ) ) );
 			if ( $id && ! is_wp_error( $id ) ) {
 				set_post_thumbnail( $id, $att );
@@ -361,6 +361,13 @@ function kv_install_links( array $ids ) {
 /** @return array{created:array,skipped:array,drafted:array} */
 function kv_install(): array {
 	$report    = array( 'created' => array(), 'skipped' => array(), 'drafted' => array() );
+	// One run at a time: theme activation once fired twice in parallel on the live site and duplicated a work.
+	if ( ! add_option( 'kv_install_lock', time(), '', false ) ) {
+		if ( time() - (int) get_option( 'kv_install_lock' ) < 600 ) {
+			return $report;
+		}
+		update_option( 'kv_install_lock', time(), false );
+	}
 	$attention = array();
 	$ids       = array();
 	$menu      = 0;
@@ -491,6 +498,7 @@ function kv_install(): array {
 	update_option( 'kv_install_report', $report + array( 'attention' => $attention, 'time' => current_time( 'mysql' ) ), false );
 	kv_refresh_imported_work_names();
 	update_option( 'kv_install_version', KV_VERSION, false );
+	delete_option( 'kv_install_lock' );
 	return $report;
 }
 
