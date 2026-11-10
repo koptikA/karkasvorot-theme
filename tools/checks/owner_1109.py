@@ -98,7 +98,7 @@ ALSO = {  # file -> (main service, «Прочие» section, extra sections)
     "slider1.jpg": ("karkas-otkatnyh-vorot", "", []),
     "frame-125.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
     "kovanye-vorota-s-kirpichnymi-stolbami.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
-    "raspashnye-vorota-s-kalitkoj.png": ("prochie-izdeliya", "zabory", ["kalitki"]),
+    "raspashnye-vorota-s-kalitkoj.png": ("kalitki", "", []),
     "naves-dlya-mashin-karkas-vorot-by.jpg": ("navesy-dlya-avto", "", []),
 }
 
@@ -211,6 +211,8 @@ def check(base, s):
     prochie = fetch(base + "/nashi-raboty/?usluga=prochie-izdeliya")[1]
     if _cards(_main(prochie), links["naves-dlya-mashin-karkas-vorot-by.jpg"]["url"]) or (navesy and _cards(navesy.group(0), links["naves-dlya-mashin-karkas-vorot-by.jpg"]["url"])):
         fails.append("работа-навес продублирована в «Прочих изделиях»")
+    if _cards(_main(prochie), links["raspashnye-vorota-s-kalitkoj.png"]["url"]):
+        fails.append("зелёный забор с калиткой продублирован в «Прочих изделиях»")
     if out["works"]["naves-dlya-avto.jpg"]["service"] != "navesy-dlya-avto":
         fails.append("работа-навес не привязана к странице навесов")
     if out["mangal"][0] != 1 or out["mangal"][1] != "prochie-izdeliya" or not out["mangal"][2].startswith("mangal-na-podstavke"):

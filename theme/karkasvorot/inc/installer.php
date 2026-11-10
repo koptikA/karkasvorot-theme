@@ -163,7 +163,7 @@ function kv_install_works(): array {
 	return array(
 		'kovanye-vorota-s-kirpichnymi-stolbami.jpg' => array( 'karkas-raspashnyh-vorot', '', array( 'kalitki' ) ),
 		'frame-125.jpg'                             => array( 'karkas-raspashnyh-vorot', '', array( 'kalitki' ) ),
-		'raspashnye-vorota-s-kalitkoj.png'          => array( 'prochie-izdeliya', 'zabory', array( 'kalitki' ) ),
+		'raspashnye-vorota-s-kalitkoj.png'          => array( 'kalitki', '' ), // owner: only in «Калитки», not in «Прочие»
 		'zabor-iz-profnastila-bordo-cena.jpg'       => array( 'prochie-izdeliya', 'zabory' ),
 		'naves-dlya-mashin-karkas-vorot-by.jpg'     => array( 'navesy-dlya-avto', '' ), // owner: only on the carports page, not duplicated in «Прочие»
 		'sadovaya-bosedka-barbekyu-karkas.jpg'      => array( 'prochie-izdeliya', 'navesy' ),
