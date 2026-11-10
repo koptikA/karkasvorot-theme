@@ -65,7 +65,7 @@ def main():
     ap.add_argument('--apply', action='store_true')
     ap.add_argument('--only', nargs='*')
     args = ap.parse_args()
-    files = [f for f in FILES if not args.only or any(o in f for o in args.only)]
+    files = [f for f in FILES if not args.only or any(os.path.basename(f).startswith(o) for o in args.only)]
     if args.preview:
         rows = []
         for f in files:
