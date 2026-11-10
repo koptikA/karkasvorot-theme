@@ -59,7 +59,6 @@ $kv_items = array( 'Откатные ворота', 'Распашные воро
 			<div class="kv-orbit__card">
 				<p class="kv-orbit__count"><b>01</b><small> / <?php echo esc_html( sprintf( '%02d', count( $kv_works ) ) ); ?></small></p>
 				<p class="kv-orbit__cap"><?php echo esc_html( get_the_title( $kv_works[0] ) ); ?></p>
-				<a class="kv-orbit__all" href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>">Все работы</a>
 			</div>
 		</div>
 		<div class="kv-orbit__stage">

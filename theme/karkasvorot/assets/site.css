@@ -171,7 +171,6 @@ a:hover { color: var(--kv-text); }
 .kv-orbit__text { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px 20px; border-bottom: 1px solid var(--kv-line); padding-bottom: 18px; margin-bottom: 34px; }
 .kv-orbit__text .kv-tag { flex-basis: 100%; }
 .kv-orbit__h { margin: 0; }
-.kv-orbit__all { font: .8125rem var(--kv-mono); }
 .kv-orbit__more { display: flex; justify-content: center; padding-top: 28px; padding-bottom: 56px; }
 .kv-orbit__more .kv-btn { min-width: min(100%, 22rem); text-align: center; }
 .kv-orbit__stage { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 12px; }
@@ -191,7 +190,6 @@ a:hover { color: var(--kv-text); }
 .is-orbit .kv-orbit__count { display: block; margin: 0; font: 800 2.125rem var(--kv-head); color: var(--kv-hot); }
 .kv-orbit__count small { font-size: .875rem; color: var(--kv-muted); }
 .is-orbit .kv-orbit__cap { display: block; margin: 0; font-size: .95rem; line-height: 1.45; color: var(--kv-soft); }
-.is-orbit .kv-orbit__all { grid-column: 1 / -1; }
 .is-orbit .kv-orbit__stage { display: block; position: relative; height: 100%; }
 .is-orbit .kv-orbit__item { --s: min(36vw, 520px); position: absolute; left: 50%; top: 50%; width: var(--s); aspect-ratio: 4 / 3; margin: calc(var(--s) * -.375) 0 0 calc(var(--s) * -.5); will-change: transform; }
 .is-orbit .kv-orbit__img { height: 100%; border: 6px solid var(--kv-paper); box-shadow: 0 30px 60px -20px rgb(0 0 0 / .8); }
