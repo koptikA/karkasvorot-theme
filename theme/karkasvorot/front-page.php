@@ -73,6 +73,7 @@ $kv_items = array( 'Откатные ворота', 'Распашные воро
 		<p class="kv-orbit__hint" aria-hidden="true">Листайте вниз</p>
 	</div>
 </section>
+<div class="kv-wrap kv-orbit__more"><a class="kv-btn" href="<?php echo esc_url( get_post_type_archive_link( 'work' ) ); ?>">Смотреть все работы</a></div>
 <?php endif; ?>
 
 <section class="kv-band" aria-labelledby="kv-steps-title">

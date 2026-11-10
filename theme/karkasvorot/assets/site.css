@@ -172,6 +172,8 @@ a:hover { color: var(--kv-text); }
 .kv-orbit__text .kv-tag { flex-basis: 100%; }
 .kv-orbit__h { margin: 0; }
 .kv-orbit__all { font: .8125rem var(--kv-mono); }
+.kv-orbit__more { display: flex; justify-content: center; padding-top: 28px; padding-bottom: 56px; }
+.kv-orbit__more .kv-btn { min-width: min(100%, 22rem); text-align: center; }
 .kv-orbit__stage { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 12px; }
 .kv-orbit__item { display: block; color: var(--kv-text); text-decoration: none; }
 .kv-orbit__img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #222; }
@@ -366,7 +368,7 @@ input, select, textarea, button { font: inherit; }
 	.kv-product__spec { font-size: .6875rem; }
 	.kv-hero__cta .kv-btn { flex: 1 1 100%; }
 	.kv-flow, .kv-steps__list { grid-template-columns: 1fr; }
-	.kv-orbit__title b { font-size: 30px; }
+	.kv-orbit__title b { font-size: min(30px, 7.6vw); }
 	.kv-orbit__title span { font-size: 20px; }
 	.is-orbit .kv-orbit__count { font-size: 1.6rem; }
 }
