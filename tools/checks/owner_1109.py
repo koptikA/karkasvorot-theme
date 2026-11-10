@@ -15,6 +15,9 @@ PHOTOS = {  # new file in the theme -> legacy source of the work
     "vorota-chernye-prutok-u-doma.jpg": "slider4.png",
     "zelenyy-zabor-s-kalitkoy.jpg": "raspashnye-vorota-s-kalitkoj.png",
     "obuvnitsa-svarnaya.jpg": "slider10.jpg",
+    "vorota-s-pikami.jpg": "slider2.jpg",
+    "kovanye-vorota-s-kalitkoy.jpg": "kovanye-vorota-s-kirpichnymi-stolbami.jpg",
+    "zabor-bordo-profnastil.jpg": "zabor-iz-profnastila-bordo-cena.jpg",
 }
 FRAME_Q = "Продаёте ли ролики, направляющую, автоматику?"
 # Before the owner's answer: «доставка и монтаж по всей Беларуси», «выезд на монтаж … согласуем».
@@ -96,7 +99,7 @@ ALSO = {  # file -> (main service, «Прочие» section, extra sections)
     "frame-125.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
     "kovanye-vorota-s-kirpichnymi-stolbami.jpg": ("karkas-raspashnyh-vorot", "", ["kalitki"]),
     "raspashnye-vorota-s-kalitkoj.png": ("prochie-izdeliya", "zabory", ["kalitki"]),
-    "naves-dlya-mashin-karkas-vorot-by.jpg": ("navesy-dlya-avto", "navesy", ["prochie-izdeliya"]),
+    "naves-dlya-mashin-karkas-vorot-by.jpg": ("navesy-dlya-avto", "", []),
 }
 
 
@@ -202,8 +205,12 @@ def check(base, s):
         if n != 1:
             fails.append("%s: работа %s показана %d раз, нужно 1" % (path, file, n))
     navesy = re.search(r'id="navesy".*?</section>', misc, re.S)
-    if not navesy or _cards(navesy.group(0), links["naves-dlya-mashin-karkas-vorot-by.jpg"]["url"]) != 1 or base + NAVESY not in navesy.group(0):
-        fails.append("прочие изделия: в разделе навесов нет работы-навеса рядом со ссылкой на страницу навесов")
+    if not navesy or base + NAVESY not in navesy.group(0):
+        fails.append("прочие изделия: в разделе навесов нет ссылки на страницу навесов")
+    # owner 2026-11-10: the carport is shown only on its own page, not duplicated in «Прочие»
+    prochie = fetch(base + "/nashi-raboty/?usluga=prochie-izdeliya")[1]
+    if _cards(_main(prochie), links["naves-dlya-mashin-karkas-vorot-by.jpg"]["url"]) or (navesy and _cards(navesy.group(0), links["naves-dlya-mashin-karkas-vorot-by.jpg"]["url"])):
+        fails.append("работа-навес продублирована в «Прочих изделиях»")
     if out["works"]["naves-dlya-avto.jpg"]["service"] != "navesy-dlya-avto":
         fails.append("работа-навес не привязана к странице навесов")
     if out["mangal"][0] != 1 or out["mangal"][1] != "prochie-izdeliya" or not out["mangal"][2].startswith("mangal-na-podstavke"):
@@ -221,7 +228,7 @@ def check(base, s):
         fails.append("обновление старой установки: работа slider1 %r" % live)
     if live["frame"] != ["kalitki", "karkas-otkatnyh-vorot"]:
         fails.append("обновление старой установки: frame-125 также в %r (ручной раздел потерян или дубли)" % live["frame"])
-    if live["naves"] != ["navesy-dlya-avto", "navesy", ["prochie-izdeliya"]]:
+    if live["naves"] != ["navesy-dlya-avto", "", []]:
         fails.append("обновление старой установки: навес %r" % live["naves"])
     if live["frame_q"] != 1:
         fails.append("обновление старой установки: вопрос про комплектующие %d раз" % live["frame_q"])

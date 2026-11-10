@@ -165,7 +165,7 @@ function kv_install_works(): array {
 		'frame-125.jpg'                             => array( 'karkas-raspashnyh-vorot', '', array( 'kalitki' ) ),
 		'raspashnye-vorota-s-kalitkoj.png'          => array( 'prochie-izdeliya', 'zabory', array( 'kalitki' ) ),
 		'zabor-iz-profnastila-bordo-cena.jpg'       => array( 'prochie-izdeliya', 'zabory' ),
-		'naves-dlya-mashin-karkas-vorot-by.jpg'     => array( 'navesy-dlya-avto', 'navesy', array( 'prochie-izdeliya' ) ),
+		'naves-dlya-mashin-karkas-vorot-by.jpg'     => array( 'navesy-dlya-avto', '' ), // owner: only on the carports page, not duplicated in «Прочие»
 		'sadovaya-bosedka-barbekyu-karkas.jpg'      => array( 'prochie-izdeliya', 'navesy' ),
 		'slider10.jpg'                              => array( 'prochie-izdeliya', 'obuvnicy' ),
 		'slider9.jpg'                               => array( 'prochie-izdeliya', 'mebel' ),
@@ -202,6 +202,9 @@ function kv_install_photos(): array {
 		'vorota-chernye-prutok-u-doma.jpg' => array( 'slider4.png', 'Чёрные металлические ворота из вертикальных прутьев у кирпичного дома' ),
 		'zelenyy-zabor-s-kalitkoy.jpg'     => array( 'raspashnye-vorota-s-kalitkoj.png', 'Зелёный забор из профнастила с калиткой' ),
 		'obuvnitsa-svarnaya.jpg'           => array( 'slider10.jpg', 'Сварная металлическая обувница с декоративными квадратами на боковинах' ),
+		'vorota-s-pikami.jpg'              => array( 'slider2.jpg', 'Металлические распашные ворота с декоративными пиками' ),
+		'kovanye-vorota-s-kalitkoy.jpg'    => array( 'kovanye-vorota-s-kirpichnymi-stolbami.jpg', 'Кованые ворота с калиткой между кирпичными столбами' ),
+		'zabor-bordo-profnastil.jpg'       => array( 'zabor-iz-profnastila-bordo-cena.jpg', 'Забор из бордового профнастила с кирпичным столбом' ),
 		'mangal-na-podstavke.jpg'          => array( '', 'Металлический мангал на подставке с боковыми полками во дворе' ),
 	);
 }
@@ -334,10 +337,6 @@ function kv_install_links( array $ids ) {
 	$w = $work( 'slider1.jpg' );
 	if ( $w && ! empty( $ids['karkas-raspashnyh-vorot'] ) && ! empty( $ids['karkas-otkatnyh-vorot'] ) && (int) get_post_meta( $w, '_kv_service', true ) === (int) $ids['karkas-raspashnyh-vorot'] ) {
 		update_post_meta( $w, '_kv_service', (string) $ids['karkas-otkatnyh-vorot'] );
-	}
-	$w = $work( 'naves-dlya-mashin-karkas-vorot-by.jpg' );
-	if ( $w && ! get_post_meta( $w, '_kv_section', true ) ) {
-		update_post_meta( $w, '_kv_section', 'navesy' );
 	}
 	foreach ( $works as $file => $target ) {
 		$w = empty( $target[2] ) ? 0 : $work( $file );
