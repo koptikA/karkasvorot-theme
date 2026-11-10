@@ -217,3 +217,48 @@ add_action( 'template_redirect', function () {
 add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'kv-form', get_template_directory_uri() . '/assets/form.css', array( 'kv-site' ), kv_asset_ver( 'form.css' ) );
 } );
+
+/** Lead counts for the admin dashboard: today / 7 days / 30 days (site time) and the latest leads. */
+function kv_leads_summary( int $last = 5 ): array {
+	$now   = current_time( 'timestamp' );
+	$count = function ( $from ) {
+		$q = new WP_Query( array( 'post_type' => 'lead', 'post_status' => 'any', 'fields' => 'ids', 'posts_per_page' => 1, 'date_query' => array( array( 'after' => $from, 'inclusive' => true ) ) ) );
+		return (int) $q->found_posts;
+	};
+	return array(
+		'today' => $count( gmdate( 'Y-m-d 00:00:00', $now ) ),
+		'week'  => $count( gmdate( 'Y-m-d 00:00:00', $now - 6 * DAY_IN_SECONDS ) ),
+		'month' => $count( gmdate( 'Y-m-d 00:00:00', $now - 29 * DAY_IN_SECONDS ) ),
+		'last'  => get_posts( array( 'post_type' => 'lead', 'post_status' => 'any', 'numberposts' => $last ) ),
+	);
+}
+
+add_action( 'wp_dashboard_setup', function () {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	wp_add_dashboard_widget( 'kv_leads', 'Заявки с сайта', function () {
+		$s = kv_leads_summary();
+		echo '<p style="display:flex;gap:24px;font-size:14px;margin:0 0 12px">';
+		foreach ( array( 'today' => 'Сегодня', 'week' => '7 дней', 'month' => '30 дней' ) as $k => $label ) {
+			echo '<span><b style="display:block;font-size:24px;line-height:1.2">' . (int) $s[ $k ] . '</b>' . esc_html( $label ) . '</span>';
+		}
+		echo '</p>';
+		if ( ! $s['last'] ) {
+			echo '<p>Заявок пока нет.</p>';
+		} else {
+			echo '<ul style="margin:0">';
+			foreach ( $s['last'] as $lead ) {
+				$phone = (string) get_post_meta( $lead->ID, '_kv_phone', true );
+				$bits  = array_filter( array( (string) get_post_meta( $lead->ID, '_kv_name', true ), (string) get_post_meta( $lead->ID, '_kv_product', true ) ) );
+				echo '<li style="padding:6px 0;border-top:1px solid #eee">' . esc_html( get_the_date( 'd.m H:i', $lead ) ) . ' · <a href="' . esc_url( 'tel:' . $phone, array( 'tel' ) ) . '">' . esc_html( $phone ) . '</a>' . ( $bits ? ' · ' . esc_html( implode( ' · ', $bits ) ) : '' ) . ' · <a href="' . esc_url( get_edit_post_link( $lead->ID ) ) . '">открыть</a></li>';
+			}
+			echo '</ul>';
+		}
+		echo '<p style="margin-bottom:0"><a class="button" href="' . esc_url( admin_url( 'edit.php?post_type=lead' ) ) . '">Все заявки</a></p>';
+	} );
+	// first in the left column
+	global $wp_meta_boxes;
+	$normal = $wp_meta_boxes['dashboard']['normal']['core'];
+	$wp_meta_boxes['dashboard']['normal']['core'] = array( 'kv_leads' => $normal['kv_leads'] ) + $normal; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
+} );

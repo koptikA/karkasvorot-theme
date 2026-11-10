@@ -115,6 +115,18 @@ def _post_fails(base):
     return fails
 
 
+def _summary_check(base):
+    """Dashboard summary counts the lead created just now in today/week/month."""
+    out = run_php(base, "$a = kv_leads_summary(); $id = wp_insert_post( array( 'post_type' => 'lead', 'post_status' => 'publish', 'post_title' => 'Заявка: summary' ) ); $b = kv_leads_summary(); wp_delete_post( $id, true ); echo wp_json_encode( array( $a['today'], $a['week'], $a['month'], $b['today'], $b['week'], $b['month'], count( $b['last'] ) > 0 ) );")
+    try:
+        a0, a1, a2, b0, b1, b2, last = json.loads(out)
+    except Exception:
+        return ["сводка заявок в админке: %r" % out[:200]]
+    if (b0, b1, b2) != (a0 + 1, a1 + 1, a2 + 1) or not last:
+        return ["сводка заявок в админке не учла новую заявку: %r" % out]
+    return []
+
+
 def check(base, s):
     fails = []
     status, home, _ = fetch(base + "/")
@@ -156,4 +168,5 @@ def check(base, s):
     finally:
         run_php(base, ('set_theme_mod("kv_metrika_id", %s);' % ("'" + old["value"].replace("\\", "\\\\").replace("'", "\\'") + "'")) if old['exists'] else 'remove_theme_mod("kv_metrika_id");')
     fails += _post_fails(base)
+    fails += _summary_check(base)
     return fails
